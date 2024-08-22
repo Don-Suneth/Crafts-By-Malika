@@ -28,7 +28,7 @@
   
   .logo {
     color: #b7223e;
-    font-size: 40px; 
+    font-size: 50px; 
     font-weight: bold;
     font-style: initial;
     position: absolute;
@@ -43,8 +43,8 @@
   nav a {
     text-decoration: none;
     color: #000;
-    font-size: 20px; 
-    padding: 0 24px; 
+    font-size: 18px; 
+    padding: 0 30px; 
   }
   
   nav a:hover {
