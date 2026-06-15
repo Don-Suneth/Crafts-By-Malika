@@ -1,0 +1,19 @@
+# Secrets — NEVER commit these (payment/API keys, webhook secrets, etc.)
+.env
+.env.*
+*.local
+secrets.*
+
+# Dependencies / build output (none used today, but guard against accidents)
+node_modules/
+dist/
+build/
+
+# OS & editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*~
