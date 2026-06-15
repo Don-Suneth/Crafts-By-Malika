@@ -1,162 +1,475 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Crafts.By.Malika</title>
-    <link rel="stylesheet" href="style.css" />
-    <meta name="description" content="Discover handmade crochet designs by Crafts.By.Malika. Shop unique, handcrafted items perfect for gifting or home decor.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary SEO -->
+  <title>Crafts by Malika — Handmade Crochet from Sri Lanka</title>
+  <meta name="description" content="Crafts by Malika makes handmade crochet toys, accessories and home décor in Sri Lanka. Browse the collection and request custom, made-to-order pieces." />
+  <!-- TODO(deploy): replace https://crafts-by-malika.example with your real domain in this file, robots.txt and sitemap.xml -->
+  <link rel="canonical" href="https://crafts-by-malika.example/" />
+  <meta name="theme-color" content="#a8482a" />
+
+  <!-- Open Graph / social sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Crafts by Malika" />
+  <meta property="og:title" content="Crafts by Malika — Handmade Crochet from Sri Lanka" />
+  <meta property="og:description" content="Handmade crochet toys, accessories and home décor, made to order in Sri Lanka." />
+  <meta property="og:url" content="https://crafts-by-malika.example/" />
+  <!-- TODO(business): ideally provide a dedicated 1200x630 share image. For now this uses a real product photo. -->
+  <meta property="og:image" content="https://crafts-by-malika.example/1.png" />
+  <meta property="og:image:alt" content="A hand-crocheted turtle toy by Crafts by Malika." />
+
+  <!-- Twitter / X card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Crafts by Malika — Handmade Crochet from Sri Lanka" />
+  <meta name="twitter:description" content="Handmade crochet toys, accessories and home décor, made to order in Sri Lanka." />
+  <meta name="twitter:image" content="https://crafts-by-malika.example/1.png" />
+
+  <!-- Favicon (SVG, modern browsers) -->
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Adds a hook so CSS can enhance only when JavaScript is available
+       (progressive enhancement). Runs early to avoid a flash of un-enhanced UI. -->
+  <script>document.documentElement.classList.add('js');</script>
+
+  <!-- Structured data: Organisation only. Deliberately contains NO prices, stock,
+       reviews or shipping claims, since those are not yet confirmed. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Crafts by Malika",
+    "description": "Handmade crochet toys, accessories and home décor, made to order in Sri Lanka.",
+    "url": "https://crafts-by-malika.example/",
+    "logo": "https://crafts-by-malika.example/logo.svg",
+    "areaServed": "LK",
+    "sameAs": [
+      "https://www.facebook.com/crafts.bymalika",
+      "https://www.instagram.com/crafts.bymalika"
+    ]
+  }
+  </script>
 </head>
 <body>
-    <nav>
-        <div class="column-right">
-            <img src="./logo.svg" alt="Crafts.byMalika Logo" class="logo-image" />
-        </div>
-        <div class="logo">Crafts.By.Malika</div>
-        <div class="nav-items">
-            <a href="">Home</a> 
+  <a class="skip-link" href="#main">Skip to content</a>
 
-        </div>
-    </nav>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="#home" aria-label="Crafts by Malika — home">
+        <img src="logo.svg" alt="" class="brand__logo" width="48" height="48" />
+        <span class="brand__name">Crafts by Malika</span>
+      </a>
 
-    <section class="hero">
-        <div class="hero-container">
-            <div class="column-left">
-                <h1>Home Made Crochet Designs</h1>
-                <p>
-                    Crafted with passion, made to impress—our exclusive crochet designs are the perfect blend of style and comfort. 
-                    Perfect for gifting to your loved ones. Grab this limited-time offer and elevate your home today!
-                </p>
-                <button class="cta-button">Shop Now</button>
-                
-                <section class="contact-section">
-                    <h2 class="contact-heading">CONTACT US</h2>
-                    <div class="contact-card">
-                        <div class="contact-item">
-                            <span class="contact-icon">📞</span>
-                            <div class="contact-details">
-                                <p><strong>Mobile / WhatsApp:</strong> 0480152146</p>
-                                <p>Suneth</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <span class="contact-icon">✉️</span>
-                            <div class="contact-details">
-                                <p><strong>Email:</strong> neranjasuneth@gmail.com</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
-            </div>
-            <div class="column-right">
-                <img src="./Crochet-rafiki.svg" alt="Crochet Designs Illustration" class="hero-image" />
-            </div>
+      <nav class="primary-nav" aria-label="Primary">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="primary-menu">
+          <span class="nav-toggle__bars" aria-hidden="true"></span>
+          <span class="nav-toggle__label">Menu</span>
+        </button>
+        <ul class="primary-nav__menu" id="primary-menu">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#shop">Shop</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#custom">Custom Orders</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============================ HERO ============================ -->
+    <section id="home" class="hero">
+      <div class="container hero__inner">
+        <div class="hero__text">
+          <p class="eyebrow">Handmade in Sri Lanka</p>
+          <h1>Handmade crochet creations, thoughtfully made in&nbsp;Sri&nbsp;Lanka</h1>
+          <p class="hero__lead">
+            Crafts by Malika is a small family business making crochet toys,
+            accessories and home décor by hand — one stitch at a time. Most pieces
+            are made to order, so colours and sizes can be tailored to you.
+          </p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#shop">Browse the collection</a>
+            <a class="btn btn--secondary" href="#custom">Request a custom order</a>
+          </div>
+          <p class="hero__note">Based in Sri Lanka · Ships locally and internationally · Enquiries welcome</p>
         </div>
+        <div class="hero__media">
+          <img src="Crochet-rafiki.svg" alt="Illustration representing handmade crochet" class="hero__image" width="520" height="520" />
+        </div>
+      </div>
     </section>
 
-    <h1 class="pheading">Latest Products</h1>
+    <!-- ============================ SHOP ============================ -->
+    <section id="shop" class="section shop">
+      <div class="container">
+        <header class="section__head">
+          <h2>Our handmade collection</h2>
+          <p class="section__intro">
+            Every item is crocheted by hand. Many are made to order, so small
+            variations are part of their charm. Tap an item to see more details or
+            to send an enquiry.
+          </p>
+        </header>
 
-    <section class="sec">
-        <div class="products">
+        <!-- Category filters (enhanced by JavaScript; falls back to showing all) -->
+        <div class="filters" id="filters" role="group" aria-label="Filter products by category"></div>
 
-            <!-- Card Start -->
-            <div class="card">
-                <div class="img"><img src="1.png" alt="Forest Turtle Toy"></div>
-                <div class="title">Forest Turtle Toy</div>
-                <div class="description">A charming, handcrafted turtle toy, perfect for all ages.</div>
-                <div class="box">
-                    <div class="price">AUD$10.00</div>
-                </div>
-            </div>
-            <!-- Card End -->
-
-            <!-- Card Start -->
-            <div class="card">
-                <div class="img"><img src="2.png" alt="Blush Turtle Toy"></div>
-                <div class="title">Blush Turtle Toy</div>
-                <div class="description">A soft and cuddly turtle toy in blush color.</div>
-                <div class="box">
-                    <div class="price">AUD$10.00</div>
-                </div>
-            </div>
-            <!-- Card End -->
-
-            <!-- Card Start -->
-            <div class="card">
-                <div class="img"><img src="3.png" alt="Rosy Birdie Buddy"></div>
-                <div class="title">Rosy Birdie Buddy</div>
-                <div class="description">This birdie buddy brings a touch of whimsy to any room.</div>
-                <div class="box">
-                    <div class="price">AUD$12.00</div>
-                </div>
-            </div>
-            <!-- Card End -->
-
-            <!-- Card Start -->
-            <div class="card">
-                <div class="img"><img src="4.png" alt="Pink Love Heart"></div>
-                <div class="title">Pink Love Heart</div>
-                <div class="description">A lovely pink heart to show your affection.</div>
-                <div class="box">
-                    <div class="price">AUD$15.00</div>
-                </div>
-            </div>
-            <!-- Card End -->
-
-            <!-- Card Start -->
-            <div class="card">
-                <div class="img"><img src="5.png" alt="Ocean Breeze Scrunchie"></div>
-                <div class="title">Ocean Breeze Scrunchie</div>
-                <div class="description">A refreshing scrunchie that complements any outfit.</div>
-                <div class="box">
-                    <div class="price">AUD$5.00</div>
-                </div>
-            </div>
-            <!-- Card End -->
-
-            <!-- Card Start -->
-            <div class="card">
-                <div class="img"><img src="6.png" alt="Boho Chic Wall Hanging"></div>
-                <div class="title">Boho Chic Wall Hanging</div>
-                <div class="description">Add a bohemian touch to your home with this wall hanging.</div>
-                <div class="box">
-                    <div class="price">AUD$30.00</div>
-                </div>
-            </div>
-            <!-- Card End -->
-
-            <!-- Card Start -->
-            <div class="card">
-                <div class="img"><img src="7.png" alt="Heritage Granny Throw"></div>
-                <div class="title">Heritage Granny Throw</div>
-                <div class="description">A cozy throw for chilly nights, inspired by heritage designs.</div>
-                <div class="box">
-                    <div class="price">AUD$30.00</div>
-                </div>
-            </div>
-            <!-- Card End -->
-
-            <!-- Card Start -->
-            <div class="card">
-                <div class="img"><img src="8.png" alt="Golden Fringe Wrap"></div>
-                <div class="title">Golden Fringe Wrap</div>
-                <div class="description">A golden wrap perfect for any occasion.</div>
-                <div class="box">
-                    <div class="price">AUD$25.00</div>
-                </div>
-            </div>
-            <!-- Card End -->
-
+        <!-- Product grid is rendered from products.js by app.js -->
+        <div class="product-grid" id="product-grid" aria-live="polite">
+          <p class="product-grid__loading">Loading the collection…</p>
         </div>
+
+        <noscript>
+          <div class="noscript-note">
+            <p>
+              Browsing the live collection needs JavaScript enabled. You can still
+              see our work and order by contacting us directly:
+            </p>
+            <p>
+              <a href="https://wa.me/61480152146">Message us on WhatsApp</a> ·
+              <a href="mailto:neranjasuneth@gmail.com">Email us</a> ·
+              <a href="https://www.instagram.com/crafts.bymalika">See photos on Instagram</a>
+            </p>
+          </div>
+        </noscript>
+      </div>
     </section>
 
-    <footer>
-        <p>Follow us on 
-            <a href="https://www.facebook.com/crafts.bymalika">Facebook</a> | 
-            <a href="https://www.instagram.com/crafts.bymalika">Instagram</a>
-        </p>
-        <p>&copy; 2024 Crafts.By.Malika. All Rights Reserved.</p>
-    </footer>
+    <!-- ============================ ABOUT ============================ -->
+    <section id="about" class="section about">
+      <div class="container about__inner">
+        <div class="about__text">
+          <h2>About Crafts by Malika</h2>
+          <p>
+            Crafts by Malika is a genuine family business based in Sri Lanka. Every
+            piece is crocheted by hand by Malika, from soft amigurumi toys to shawls,
+            scrunchies and home décor.
+          </p>
+          <p>
+            Because each item is handmade — and most are made to order — you can ask
+            for different colours, sizes or small personal touches. No two handmade
+            pieces are ever exactly alike, and that is part of what makes them special.
+          </p>
+          <!-- TODO(business): Expand this with the real story in Malika's own words —
+               how she started, what she loves making, and what handmade means to the
+               family. Keep it genuine; do not add invented details. -->
+        </div>
+        <ul class="about__highlights">
+          <li><strong>Handmade</strong><span>Crocheted by hand, not mass-produced</span></li>
+          <li><strong>Made to order</strong><span>Colours and sizes can be tailored</span></li>
+          <li><strong>From Sri Lanka</strong><span>A small family business</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ======================= CUSTOM ORDERS ======================= -->
+    <section id="custom" class="section custom">
+      <div class="container">
+        <header class="section__head">
+          <h2>Custom orders</h2>
+          <p class="section__intro">
+            Have something specific in mind? We love custom, made-to-order pieces.
+            Here is how it works:
+          </p>
+        </header>
+
+        <ol class="steps">
+          <li><span class="steps__num">1</span> You share your idea using the form below.</li>
+          <li><span class="steps__num">2</span> We confirm the design, size, colours, price, currency and timeframe.</li>
+          <li><span class="steps__num">3</span> Where delivery is needed, we calculate the shipping cost.</li>
+          <li><span class="steps__num">4</span> You approve the quotation.</li>
+          <li><span class="steps__num">5</span> We confirm payment arrangements together.</li>
+          <li><span class="steps__num">6</span> Your piece is made by hand.</li>
+          <li><span class="steps__num">7</span> We arrange pickup or delivery.</li>
+        </ol>
+
+        <form class="enquiry-form" id="custom-order-form" novalidate>
+          <p class="enquiry-form__intro">
+            Fields marked <span aria-hidden="true">*</span> are required. We only ask
+            for what we need to prepare your quote.
+          </p>
+
+          <div class="form-grid">
+            <p class="field">
+              <label for="cf-name">Your name <span aria-hidden="true">*</span></label>
+              <input id="cf-name" name="name" type="text" autocomplete="name" required />
+            </p>
+            <p class="field">
+              <label for="cf-country">Country <span aria-hidden="true">*</span></label>
+              <input id="cf-country" name="country" type="text" autocomplete="country-name" required />
+            </p>
+            <p class="field">
+              <label for="cf-email">Email <span aria-hidden="true">*</span></label>
+              <input id="cf-email" name="email" type="email" autocomplete="email" required />
+            </p>
+            <p class="field">
+              <label for="cf-phone">Phone / WhatsApp</label>
+              <input id="cf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" />
+            </p>
+            <p class="field">
+              <label for="cf-type">Product type <span aria-hidden="true">*</span></label>
+              <input id="cf-type" name="productType" type="text" list="product-types" required />
+              <datalist id="product-types">
+                <option value="Toy / Amigurumi"></option>
+                <option value="Scrunchie / Accessory"></option>
+                <option value="Wall hanging / Home décor"></option>
+                <option value="Throw / Blanket"></option>
+                <option value="Shawl / Wrap"></option>
+                <option value="Something else"></option>
+              </datalist>
+            </p>
+            <p class="field">
+              <label for="cf-colours">Preferred colours</label>
+              <input id="cf-colours" name="colours" type="text" />
+            </p>
+            <p class="field">
+              <label for="cf-size">Desired size</label>
+              <input id="cf-size" name="size" type="text" placeholder="e.g. approx. 20 cm, or 'baby blanket'" />
+            </p>
+            <p class="field">
+              <label for="cf-date">Required by (date)</label>
+              <input id="cf-date" name="requiredDate" type="date" />
+            </p>
+            <p class="field">
+              <label for="cf-budget">Budget range</label>
+              <input id="cf-budget" name="budget" type="text" placeholder="e.g. up to LKR 5,000" />
+            </p>
+            <p class="field">
+              <label for="cf-currency">Preferred currency</label>
+              <select id="cf-currency" name="currency">
+                <option value="LKR" selected>LKR — Sri Lankan Rupee</option>
+                <option value="USD">USD — US Dollar</option>
+                <option value="GBP">GBP — British Pound</option>
+                <option value="EUR">EUR — Euro</option>
+                <option value="AUD">AUD — Australian Dollar</option>
+                <option value="other">Other (tell us below)</option>
+              </select>
+            </p>
+            <p class="field">
+              <label for="cf-delivery">Delivery city / country</label>
+              <input id="cf-delivery" name="delivery" type="text" />
+            </p>
+          </div>
+
+          <p class="field field--full">
+            <label for="cf-description">Describe what you would like <span aria-hidden="true">*</span></label>
+            <textarea id="cf-description" name="description" rows="5" required
+              placeholder="Tell us about the item, who it is for, any reference photos you have, and anything else that helps."></textarea>
+          </p>
+
+          <p class="field field--checkbox">
+            <input id="cf-consent" name="consent" type="checkbox" required />
+            <label for="cf-consent">
+              I'm happy for Crafts by Malika to contact me about this enquiry. <span aria-hidden="true">*</span>
+            </label>
+          </p>
+
+          <div class="enquiry-form__actions">
+            <button type="submit" class="btn btn--primary">Send enquiry</button>
+            <a class="btn btn--ghost" id="custom-whatsapp" href="#" rel="noopener">Send via WhatsApp instead</a>
+          </div>
+
+          <p class="enquiry-form__status" id="form-status" role="status" aria-live="polite"></p>
+          <p class="enquiry-form__privacy">
+            We use your details only to reply to your enquiry and prepare a quote.
+            We don't share them or send marketing. See our
+            <a href="policies.html#privacy">privacy note</a>.
+          </p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============================ FAQ ============================ -->
+    <section id="faq" class="section faq">
+      <div class="container">
+        <header class="section__head">
+          <h2>Frequently asked questions</h2>
+        </header>
+
+        <div class="faq__list">
+          <details>
+            <summary>Are the products really handmade?</summary>
+            <p>Yes. Every item is crocheted by hand by Malika in Sri Lanka.</p>
+          </details>
+          <details>
+            <summary>Where is Crafts by Malika based?</summary>
+            <p>We are a small family business based in Sri Lanka.</p>
+          </details>
+          <details>
+            <summary>Are items in stock or made to order?</summary>
+            <p>
+              Most items are made to order, and some décor pieces are one-of-a-kind.
+              Message us about a specific item and we'll confirm its availability.
+            </p>
+          </details>
+          <details>
+            <summary>How long do custom orders take?</summary>
+            <p>
+              It depends on the item and how busy we are.
+              <!-- TODO(business): add a typical lead time once known, e.g. "usually 1–3 weeks". -->
+              Please ask when you enquire and we'll give you a timeframe.
+            </p>
+          </details>
+          <details>
+            <summary>Can I change the colours and sizes?</summary>
+            <p>Yes — because everything is handmade, colours and sizes can usually be tailored. Just ask.</p>
+          </details>
+          <details>
+            <summary>Is local pickup available?</summary>
+            <p>
+              <!-- TODO(business): confirm whether pickup is offered and from which area. -->
+              Please contact us to arrange this — we'll confirm what's possible.
+            </p>
+          </details>
+          <details>
+            <summary>Where do you deliver in Sri Lanka, and do you ship internationally?</summary>
+            <p>
+              <!-- TODO(business): confirm domestic delivery regions, couriers and whether
+                   international shipping is offered, before stating it as a promise. -->
+              We're happy to discuss delivery within Sri Lanka and internationally.
+              Contact us with your location and we'll confirm options and costs.
+            </p>
+          </details>
+          <details>
+            <summary>Which currency will I be charged in, and why might the amount differ?</summary>
+            <p>
+              Our prices are set in Sri Lankan Rupees (LKR). If you pay from another
+              country, your bank or the payment provider converts the amount and may
+              add a conversion fee, so the total in your own currency can vary slightly.
+              We'll always confirm the final amount with you before you pay.
+            </p>
+          </details>
+          <details>
+            <summary>How should I care for crochet items?</summary>
+            <p>
+              <!-- TODO(business): confirm care guidance per fibre (e.g. hand wash cold, dry flat). -->
+              As a general guide, gentle hand washing and drying flat is safest for
+              handmade crochet. We'll include specific care notes with your item.
+            </p>
+          </details>
+          <details>
+            <summary>Are the toys suitable for young children?</summary>
+            <p>
+              <!-- TODO(business): confirm whether toys use safety eyes / contain small
+                   parts, and any age guidance, before making a safety claim. -->
+              Please ask us about a specific toy before buying for a young child —
+              we'll tell you about materials and any small parts so you can decide.
+            </p>
+          </details>
+          <details>
+            <summary>What is your return policy?</summary>
+            <p>
+              <!-- TODO(business): set a clear returns/refund policy, noting that
+                   custom and made-to-order items are often non-returnable. -->
+              Our returns policy is being finalised. For now, please contact us if
+              there's any problem with your order and we'll do our best to help.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ CONTACT ============================ -->
+    <section id="contact" class="section contact">
+      <div class="container">
+        <header class="section__head">
+          <h2>Contact us</h2>
+          <p class="section__intro">
+            The quickest way to reach us is on WhatsApp. We'd love to hear from you.
+          </p>
+        </header>
+
+        <div class="contact__grid">
+          <ul class="contact__methods">
+            <li>
+              <span class="contact__icon" aria-hidden="true">💬</span>
+              <span>
+                <strong>WhatsApp</strong><br />
+                <a data-contact="whatsapp" href="https://wa.me/61480152146">+61 480 152 146</a>
+              </span>
+            </li>
+            <li>
+              <span class="contact__icon" aria-hidden="true">✉️</span>
+              <span>
+                <strong>Email</strong><br />
+                <a data-contact="email" href="mailto:neranjasuneth@gmail.com">neranjasuneth@gmail.com</a>
+              </span>
+            </li>
+            <li>
+              <span class="contact__icon" aria-hidden="true">📘</span>
+              <span>
+                <strong>Facebook</strong><br />
+                <a data-contact="facebook" href="https://www.facebook.com/crafts.bymalika">crafts.bymalika</a>
+              </span>
+            </li>
+            <li>
+              <span class="contact__icon" aria-hidden="true">📸</span>
+              <span>
+                <strong>Instagram</strong><br />
+                <a data-contact="instagram" href="https://www.instagram.com/crafts.bymalika">crafts.bymalika</a>
+              </span>
+            </li>
+          </ul>
+          <div class="contact__aside">
+            <p><strong>Location:</strong> Sri Lanka</p>
+            <p data-contact="response-time" hidden></p>
+            <p>
+              Looking for something custom? Use the
+              <a href="#custom">custom order form</a> and we'll send you a quote.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <div class="site-footer__brand">
+        <span class="brand__name">Crafts by Malika</span>
+        <p>Handmade crochet, thoughtfully made in Sri Lanka.</p>
+      </div>
+
+      <nav class="site-footer__nav" aria-label="Footer">
+        <ul>
+          <li><a href="#shop">Shop</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#custom">Custom Orders</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <nav class="site-footer__legal" aria-label="Policies">
+        <ul>
+          <li><a href="policies.html#shipping">Shipping &amp; Returns</a></li>
+          <li><a href="policies.html#privacy">Privacy</a></li>
+          <li><a href="policies.html#terms">Terms</a></li>
+          <li><a href="policies.html#currency">Currency &amp; Pricing</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="container site-footer__bottom">
+      <p class="currency-notice">
+        Prices are shown in Sri Lankan Rupees (LKR). For international orders, the
+        final amount and any currency conversion are confirmed by your bank or the
+        payment provider — see our <a href="policies.html#currency">currency note</a>.
+      </p>
+      <p class="copyright">© <span id="year">2026</span> Crafts by Malika. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Data first, then behaviour. Plain scripts so the site works from the file
+       system as well as a web server (no module/CORS requirements). -->
+  <script src="config.js"></script>
+  <script src="products.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
