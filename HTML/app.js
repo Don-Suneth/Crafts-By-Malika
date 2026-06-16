@@ -111,27 +111,24 @@
   function buildCard(p) {
     var card = el("article", { className: "card", attrs: { "data-category": p.category } });
 
-    // Media
+    // Media (square, cover fill)
     var figure = el("figure", { className: "card__media" });
-    var img = el("img", {
+    figure.appendChild(el("img", {
       attrs: {
         src: p.image,
         alt: p.imageAlt || p.name,
         loading: "lazy",
         decoding: "async",
       },
-    });
-    figure.appendChild(img);
+    }));
     if (p.featured) {
       figure.appendChild(el("span", { className: "card__flag", text: "Featured" }));
     }
     card.appendChild(figure);
 
-    // Body
+    // Body: title + price/status only
     var body = el("div", { className: "card__body" });
-    body.appendChild(el("p", { className: "card__category", text: p.category }));
     body.appendChild(el("h3", { className: "card__title", text: p.name }));
-    body.appendChild(el("p", { className: "card__desc", text: p.shortDescription }));
 
     var meta = el("div", { className: "card__meta" });
     meta.appendChild(el("span", { className: "card__price", text: priceLabel(p) }));
@@ -142,10 +139,108 @@
       }));
     }
     body.appendChild(meta);
+    card.appendChild(body);
 
-    // Optional details (only render rows we actually have)
+    // Action area — text button is the accessible control; whole card is clickable.
+    var actions = el("div", { className: "card__actions" });
+    var viewBtn = el("button", {
+      className: "btn--card-cta",
+      text: "View details",
+      attrs: { type: "button", "aria-label": "View details for " + p.name },
+    });
+    viewBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      openModal(p);
+    });
+    actions.appendChild(viewBtn);
+    card.appendChild(actions);
+
+    // The whole card surface opens the modal for mouse/touch users.
+    card.addEventListener("click", function () { openModal(p); });
+
+    return card;
+  }
+
+  // ---- Product modal --------------------------------------------------------
+
+  var _modal = null;
+
+  function getModal() {
+    if (_modal) return _modal;
+
+    var overlay = el("div", {
+      className: "modal-overlay",
+      attrs: { role: "dialog", "aria-modal": "true", "aria-label": "Product details" },
+    });
+    overlay.hidden = true;
+
+    var panel = el("div", { className: "modal" });
+
+    var closeBtn = el("button", {
+      className: "modal__close",
+      text: "×",
+      attrs: { type: "button", "aria-label": "Close" },
+    });
+    closeBtn.addEventListener("click", closeModal);
+    panel.appendChild(closeBtn);
+
+    var media = document.createElement("figure");
+    media.className = "modal__media";
+    panel.appendChild(media);
+    panel.appendChild(el("div", { className: "modal__content" }));
+
+    overlay.appendChild(panel);
+
+    // Close on backdrop click
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) closeModal();
+    });
+
+    // Close on Escape
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && _modal && !_modal.hidden) closeModal();
+    });
+
+    document.body.appendChild(overlay);
+    _modal = overlay;
+    return overlay;
+  }
+
+  function openModal(p) {
+    var overlay = getModal();
+    var media = overlay.querySelector(".modal__media");
+    var content = overlay.querySelector(".modal__content");
+
+    // Rebuild media
+    media.innerHTML = "";
+    media.appendChild(el("img", {
+      attrs: { src: p.image, alt: p.imageAlt || p.name, decoding: "async" },
+    }));
+
+    // Rebuild content
+    content.innerHTML = "";
+
+    if (p.category) {
+      content.appendChild(el("p", { className: "modal__category", text: p.category }));
+    }
+    content.appendChild(el("h2", { className: "modal__title", text: p.name }));
+
+    var pills = el("div", { className: "modal__pills" });
+    pills.appendChild(el("span", { className: "modal__price", text: priceLabel(p) }));
+    if (STATUS_LABELS[p.stockStatus]) {
+      pills.appendChild(el("span", {
+        className: "modal__status modal__status--" + p.stockStatus,
+        text: STATUS_LABELS[p.stockStatus],
+      }));
+    }
+    content.appendChild(pills);
+
+    if (p.shortDescription) {
+      content.appendChild(el("p", { className: "modal__desc", text: p.shortDescription }));
+    }
+
     var detailRows = [
-      ["Description", p.fullDescription],
+      ["Full description", p.fullDescription],
       ["Materials", p.materials],
       ["Dimensions", p.dimensions],
       ["Colours", (p.colours && p.colours.length) ? p.colours.join(", ") : ""],
@@ -155,57 +250,52 @@
     ].filter(function (row) { return row[1]; });
 
     if (detailRows.length) {
-      var details = el("details", { className: "card__details" });
-      details.appendChild(el("summary", { text: "More details" }));
-      var dl = el("dl");
+      var dl = el("dl", { className: "modal__details" });
       detailRows.forEach(function (row) {
         dl.appendChild(el("dt", { text: row[0] }));
         dl.appendChild(el("dd", { text: row[1] }));
       });
-      details.appendChild(dl);
-      card.appendChild(body);
-      card.appendChild(details);
-    } else {
-      card.appendChild(body);
+      content.appendChild(dl);
     }
 
-    // Actions (honest: enquiry only, no fake "add to cart")
-    var actions = el("div", { className: "card__actions" });
-
-    var waBtn = el("a", {
-      className: "btn btn--primary btn--sm",
+    var actions = el("div", { className: "modal__actions" });
+    actions.appendChild(el("a", {
+      className: "btn btn--primary",
       text: "Enquire on WhatsApp",
       attrs: {
         href: whatsappLink(productEnquiryMessage(p)),
         target: "_blank",
         rel: "noopener",
       },
-    });
-    actions.appendChild(waBtn);
-
-    var emailBtn = el("a", {
-      className: "btn btn--ghost btn--sm",
-      text: "Email",
-      attrs: {
-        href: mailtoLink("Enquiry: " + p.name, productEnquiryMessage(p)),
-      },
-    });
-    actions.appendChild(emailBtn);
-
+    }));
+    actions.appendChild(el("a", {
+      className: "btn btn--ghost",
+      text: "Email instead",
+      attrs: { href: mailtoLink("Enquiry: " + p.name, productEnquiryMessage(p)) },
+    }));
     if (p.customisable) {
       var customBtn = el("button", {
-        className: "card__customise",
+        className: "btn btn--secondary",
         text: "Request a custom version",
         attrs: { type: "button" },
       });
       customBtn.addEventListener("click", function () {
+        closeModal();
         prefillCustomForm(p);
       });
       actions.appendChild(customBtn);
     }
+    content.appendChild(actions);
 
-    card.appendChild(actions);
-    return card;
+    overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+    overlay.querySelector(".modal__close").focus();
+  }
+
+  function closeModal() {
+    if (!_modal) return;
+    _modal.hidden = true;
+    document.body.style.overflow = "";
   }
 
   function renderProducts(filter) {
