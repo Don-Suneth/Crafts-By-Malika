@@ -9,9 +9,12 @@ is shippable on its own. Don't build later infrastructure before it's needed.
 
 The credible storefront that earns enquiries.
 
-- Data-driven catalogue (all 9 real products) from `products.js`.
-- Responsive, accessible, warm handcrafted redesign.
-- Honest CTAs: WhatsApp + email enquiry per product; custom-order form.
+- Data-driven catalogue from `products.js` (all 9 real products retained); the
+  editorial homepage features **three** of them, with a coming-soon dialog standing
+  in for the future full-collection page.
+- Minimal, premium, image-led editorial redesign (responsive + accessible);
+  self-hosted Fraunces display serif for headings.
+- Honest CTAs: WhatsApp + email enquiry per featured piece; custom-order form.
 - Custom-order flow with a 7-step explanation.
 - LKR-canonical, currency-safe price formatting (prices show when confirmed).
 - SEO fundamentals: metadata, Open Graph/Twitter, Organization schema, `robots.txt`,
@@ -57,8 +60,17 @@ _First time real money moves — kept simple and safe._
 
 ---
 
+### Dedicated full-collection page (next feature)
+
+- Build the real collection page the homepage's **"View the full collection"** button
+  points to. Reuse `products.js` (data) and the existing product `<dialog>`; reintroduce
+  a responsive grid + category filters for all nine pieces. Swap the coming-soon dialog
+  for navigation to this page at the `TODO(shop)` marker in `app.js`.
+
 ### Performance / polish backlog (any time)
 
 - Convert PNGs to **WebP/AVIF** (keep originals) and add responsive `srcset`.
 - Dedicated 1200×630 social share image.
 - Per-product pages with `Product` structured data **once prices/stock are confirmed**.
+- Fonts: the self-hosted **Fraunces** woff2 is already latin-subset (~67 KB); it can be
+  pruned further to the exact glyphs used if needed.

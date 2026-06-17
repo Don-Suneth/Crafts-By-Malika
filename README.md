@@ -13,7 +13,8 @@ décor.
 
 ## What it does
 
-- Shows the nine real products in a clean, responsive, accessible catalogue.
+- Presents an **editorial homepage** with **three featured creations**; all nine
+  real products stay in `products.js`, ready for the future full-collection page.
 - Lets customers **enquire** about any item via **WhatsApp** or **email**.
 - Provides a **custom-order form** that sends a tidy enquiry (via WhatsApp, or a form
   service if you add one).
@@ -37,9 +38,10 @@ HomeCortchet/
 │   ├── style.css             ← design system + all styles
 │   ├── config.js             ← ⚙️ business details (edit me)
 │   ├── products.js           ← 🧶 product catalogue (edit me)
-│   ├── app.js                ← rendering, currency formatting, forms, nav
+│   ├── app.js                ← featured render, dialogs, currency, forms, nav
 │   ├── robots.txt, sitemap.xml
-│   ├── logo.svg, Crochet-rafiki.svg
+│   ├── logo.svg, Crochet-rafiki.svg   ← logo (illustration retained, not on hero)
+│   ├── fonts/                ← self-hosted Fraunces display serif (headings only)
 │   └── 1.png … 9.png         ← real product photos
 ├── README.md  AUDIT.md  BUSINESS_SETUP.md  PAYMENTS_AND_CURRENCY.md  ROADMAP.md
 └── .gitignore
@@ -50,7 +52,9 @@ HomeCortchet/
 Because the site is plain static files, you have two options:
 
 **Option 1 — just open it.** Double-click `HTML/index.html` (it's built to work from
-the `file://` protocol).
+the `file://` protocol). Note: some browsers block the custom heading font over
+`file://`, in which case headings fall back to the built-in serif — everything else
+looks and works the same. Serving over HTTP (Option 2) shows the Fraunces headings.
 
 **Option 2 — serve it (recommended; closest to production).** From the `HTML/`
 folder:
@@ -86,6 +90,36 @@ Open `HTML/products.js`. Each product is one `{ … }` block.
 - **Add:** copy a block, paste it, give it a new unique `id` and `slug`.
 - **Remove:** delete the whole block (including its trailing comma).
 
+### Change the three featured products (homepage)
+
+The homepage shows **three** featured creations, not the whole catalogue. To choose
+which three appear:
+
+1. In `HTML/products.js`, set `featured: true` on the three products you want and
+   `featured: false` on the rest.
+2. (Optional) To control the **left-to-right order** of the three cards, edit the
+   `FEATURED_ORDER` list near the top of the featured section in `HTML/app.js`. Ids
+   not listed are appended automatically. The three render as equal cards.
+
+All nine products always remain in `products.js`; the unfeatured six are simply held
+back for the future full-collection page.
+
+### The homepage gallery, "coming soon" dialog & future shop
+
+- There is **no `/shop` page yet**. The **"View the full collection"** button opens an
+  accessible **coming-soon dialog** (a native `<dialog>` with Escape-to-close, focus
+  management and focus return). Without JavaScript the button is a normal link to the
+  contact footer.
+- Tapping a featured piece opens a **product dialog** (image, details and the
+  WhatsApp / email / "request a custom version" actions).
+- **Where the future shop connects:** search `HTML/app.js` for `TODO(shop)`. Replace
+  the coming-soon dialog there with navigation to the new collection page once it
+  exists. That page can reuse `products.js` (data) and the existing product dialog.
+- **Motion:** headings and sections fade in gently on scroll
+  (`IntersectionObserver`). All animation is disabled and content shown immediately
+  when the browser requests `prefers-reduced-motion: reduce`, and nothing is ever
+  hidden waiting on animation.
+
 ### Set or change a product's price (currency is LKR)
 
 In that product's block:
@@ -114,7 +148,20 @@ Until `priceConfirmed` is `true` (and a `priceMinor` is set), the card shows
 
 Put the image in `HTML/` and reference its filename in the product's `image` field
 (e.g. `image: "10.png"`). Keep the originals. Always write a factual `imageAlt`.
-Photos display fully (not cropped) on a soft background, so any aspect ratio is fine.
+The three featured cards show a compact, full-bleed `object-fit: cover` thumbnail
+(kept short on purpose); the product dialog shows the full piece. If you add a photo,
+also add its pixel size to the small `IMG_DIMS` map in `app.js` so the layout reserves
+space (prevents shift) — optional but tidy.
+
+**Hero image:** the homepage hero is a **full-bleed `background-image`** set on the
+`.hero` section in `style.css`, using `HTML/hero.jpg` (a styled crochet/yarn scene,
+sourced free from Pexels, no attribution required). It fills the viewport
+(`min-height: 100svh`) with `background-size: cover` and a warm gradient overlay so
+the left-aligned hero text stays readable. The header is transparent over the hero
+and turns into a solid cream bar once you scroll past it. There is a single primary
+CTA ("Explore our work"). To swap in your own professional photo, just replace
+`hero.jpg` (a warm, calm, portrait-ish photo crops cleanly). See the `TODO(hero)`
+note in `index.html`.
 
 ### Configure the custom-order form (optional)
 
@@ -170,7 +217,9 @@ backend.
 
 ## Known limitations (be honest)
 
-- **Not a shop yet** — no automated checkout; ordering is via enquiry.
+- **Not a shop yet** — no automated checkout; ordering is via enquiry. The homepage
+  shows three featured pieces; the full-collection page is a future step (the
+  "View the full collection" button currently opens a coming-soon dialog).
 - **Prices are hidden** until real LKR prices are confirmed.
 - **Contact details, policies, shipping, lead times and some product facts are
   placeholders** pending owner confirmation.

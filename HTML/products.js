@@ -45,7 +45,7 @@ window.PRODUCTS = [
     priceConfirmed: false,
     image: "1.png",
     imageAlt: "Hand-crocheted turtle with a green body and a spiral purple shell.",
-    featured: true,
+    featured: false,
     customisable: true,
     stockStatus: "made_to_order",
     leadTime: "",              // TODO(business): e.g. "1–2 weeks"
@@ -227,7 +227,7 @@ window.PRODUCTS = [
     priceConfirmed: false,
     image: "8.png",
     imageAlt: "Triangular cream-coloured crochet shawl with a long fringe.",
-    featured: false,
+    featured: true,
     customisable: true,
     stockStatus: "made_to_order",
     leadTime: "",
