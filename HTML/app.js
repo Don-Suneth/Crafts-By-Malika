@@ -143,7 +143,7 @@
       className: "feature reveal",
       attrs: {
         type: "button",
-        "aria-label": "View " + p.name + " — " + p.category + ". " + priceLabel(p) + ".",
+        "aria-label": "View " + p.name + " — " + p.category + ".",
       },
     });
 
@@ -164,7 +164,7 @@
     var body = el("span", { className: "feature__body" });
     body.appendChild(el("span", { className: "feature__category", text: p.category }));
     body.appendChild(el("span", { className: "feature__name", text: p.name }));
-    body.appendChild(el("span", { className: "feature__price", text: priceLabel(p) }));
+    // Price is intentionally not shown on the card; it remains in the product modal.
     // Static, non-user content only — safe to use innerHTML for the arrow glyph.
     body.appendChild(el("span", { className: "feature__cta", html: 'View &amp; enquire <span aria-hidden="true">&rarr;</span>' }));
     btn.appendChild(body);

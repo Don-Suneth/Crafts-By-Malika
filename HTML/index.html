@@ -37,7 +37,7 @@
   <!-- Hero background image — preloaded for fast LCP (it is a CSS background). -->
   <link rel="preload" href="hero.jpg" as="image" />
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2" />
 
   <!-- Adds a hook so CSS can enhance only when JavaScript is available
        (progressive enhancement). Runs early to avoid a flash of un-enhanced UI. -->
@@ -140,7 +140,7 @@
       <div class="container">
         <header class="section__head reveal">
           <p class="eyebrow">Featured creations</p>
-          <h2>A few favourites from the studio</h2>
+          <h2>A few favourites.</h2>
         </header>
 
         <!-- Editorial featured grid (one large + two smaller) is rendered from
@@ -168,15 +168,10 @@
     <!-- ====================== COLLECTION CTA (dark) ================== -->
     <section class="band">
       <div class="container band__inner reveal">
-        <div class="band__text">
-          <h2 class="band__title">There is more to see</h2>
-          <p class="band__lead">
-            Nine handmade pieces and growing. A dedicated shop is on the way.
-          </p>
-        </div>
+        <h2 class="band__title">Coming Soon</h2>
         <!-- Without JS this is a real link to the contact footer; app.js upgrades it
              to open the accessible coming-soon dialog. -->
-        <a class="btn btn--on-color" id="view-collection" href="#contact">View the full collection</a>
+        <a class="btn btn--on-color band__cta" id="view-collection" href="#contact">View available designs</a>
       </div>
     </section>
 

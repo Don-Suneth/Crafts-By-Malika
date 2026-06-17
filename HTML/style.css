@@ -428,22 +428,27 @@ h3 { font-size: var(--step-1); }
   color: var(--muted);
 }
 .feature__name { font-family: var(--font-head); font-size: var(--step-1); font-weight: 460; color: var(--text); line-height: 1.15; }
-.feature__price { font-size: var(--step-0); color: var(--muted); }
 .feature__cta {
-  margin-top: var(--space-2);
+  margin-top: var(--space-3);
   font-weight: 600;
   font-size: var(--step--1);
-  color: var(--primary-hover); /* terracotta action accent on the card */
+  color: var(--text);              /* espresso outline pill on the cream card */
+  background: transparent;
+  border: 1.5px solid var(--text);
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
+  padding: 0.55em 1.1em;
+  border-radius: 999px;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease), border-color 0.25s var(--ease);
 }
 .feature__cta span { transition: transform 0.25s var(--ease); }
 /* Restrained hover, pointer devices only. */
 @media (hover: hover) {
   .feature:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
   .feature:hover .feature__media img { transform: scale(1.04); }
+  .feature:hover .feature__cta { background: var(--surface-dark); color: var(--surface); border-color: var(--surface-dark); }
   .feature:hover .feature__cta span { transform: translateX(4px); }
 }
 
@@ -462,19 +467,34 @@ h3 { font-size: var(--step-1); }
 .noscript-note a { font-weight: 600; }
 
 /* ------------------------------- CTA band -------------------------------- */
-/* Terracotta accent band — the one strong colour block that breaks up the
-   cream/blush midsection. Cream text + a cream button keep AA contrast
-   (cream on terracotta ≈ 4.7:1). */
-.band { background: var(--primary); color: var(--surface); padding-block: clamp(3rem, 7vw, 5rem); }
+/* Warm-brown accent band — the one strong colour block that breaks up the
+   cream/blush midsection. A diagonal terracotta → brown → espresso gradient
+   adds depth; every stop stays dark enough for cream text + the cream button. */
+.band {
+  background: linear-gradient(135deg, var(--primary) 0%, #744C32 55%, var(--surface-dark) 100%);
+  color: var(--surface);
+  padding-block: clamp(4rem, 9vw, 7rem);
+}
 .band__inner {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-5);
+  text-align: center;
+  gap: var(--space-7);
 }
-.band__title { color: var(--surface); font-size: var(--step-2); }
-.band__lead { color: var(--surface); margin-top: var(--space-3); max-width: 36ch; }
+/* Centred, hero-scale display heading (same Fraunces weight as the hero), a touch
+   larger with a soft drop shadow for depth on the gradient. */
+.band__title {
+  color: var(--surface);
+  font-size: clamp(2rem, 8vw, 8.5rem);
+  font-weight: 420;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-shadow: 0 4px 24px rgba(37, 20, 12, 0.45);
+}
+/* Warmer cream button on the band (blush fill, espresso text), brightening on hover. */
+.band__cta { background: var(--bg); }
+.band__cta:hover { background: var(--surface); }
 
 /* --------------------------------- Story --------------------------------- */
 /* The single dark editorial moment on the page (one strong espresso section,
