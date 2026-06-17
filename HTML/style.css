@@ -371,21 +371,6 @@ h3 { font-size: var(--step-1); }
 .hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
 .hero__actions .btn { box-shadow: 0 10px 26px rgba(37, 20, 12, 0.28); }
 
-/* ---------------------------- Brand statement ---------------------------- */
-/* The single dark editorial moment on the page (one strong espresso section,
-   plus the footer). Large serif line in cream with a sage italic accent. */
-.statement { background: var(--surface-dark); color: var(--text-on-dark); padding-block: clamp(4rem, 10vw, 7.5rem); }
-.statement__text {
-  font-family: var(--font-head);
-  font-size: var(--step-statement);
-  font-weight: 380;
-  line-height: 1.14;
-  letter-spacing: -0.015em;
-  max-width: 20ch;
-  color: var(--text-on-dark);
-}
-.statement__text em { font-style: italic; color: var(--secondary); } /* sage accent (~5:1 on espresso) */
-
 /* --------------------------- Featured creations -------------------------- */
 /* Three simple, equal product cards. The section uses the deeper-blush tone so the
    off-white cards clearly stand out (background contrast). Each card is one
@@ -492,13 +477,18 @@ h3 { font-size: var(--step-1); }
 .band__lead { color: var(--surface); margin-top: var(--space-3); max-width: 36ch; }
 
 /* --------------------------------- Story --------------------------------- */
-.story { background: var(--surface); }
+/* The single dark editorial moment on the page (one strong espresso section,
+   plus the footer), sitting directly after the hero. On-dark tokens keep the
+   text readable on espresso. */
+.story { background: var(--surface-dark); color: var(--text-on-dark); }
+.story .eyebrow { color: var(--muted-on-dark); }
+.story__text h2 { color: var(--secondary); } /* sage accent (~5:1 on espresso) */
 .story__inner { display: grid; grid-template-columns: 1fr; gap: clamp(2rem, 4vw, 3.5rem); align-items: start; }
-.story__text p { margin-top: var(--space-5); max-width: 50ch; color: var(--text); }
+.story__text p { margin-top: var(--space-5); max-width: 50ch; color: var(--text-on-dark); }
 .story__highlights { list-style: none; padding: 0; display: grid; gap: var(--space-4); }
-.story__highlights li { border-top: 1px solid var(--border); padding-top: var(--space-4); }
-.story__highlights strong { display: block; font-family: var(--font-head); font-weight: 500; font-size: var(--step-1); color: var(--text); }
-.story__highlights span { color: var(--muted); font-size: var(--step-0); }
+.story__highlights li { border-top: 1px solid var(--border-on-dark); padding-top: var(--space-4); }
+.story__highlights strong { display: block; font-family: var(--font-head); font-weight: 500; font-size: var(--step-1); color: var(--text-on-dark); }
+.story__highlights span { color: var(--muted-on-dark); font-size: var(--step-0); }
 
 /* ----------------------------- Custom orders ----------------------------- */
 /* Deeper-blush section so the off-white reveal panel stands out (same contrast
