@@ -3,13 +3,15 @@
  * -----------------------------------------------------------------------------
  * Responsibilities:
  *   1. Format money safely (LKR, minor units, Intl.NumberFormat, with fallback).
- *   2. Render the product catalogue and category filters from products.js.
- *   3. Build honest calls to action (WhatsApp / email enquiries — no fake checkout).
- *   4. Drive the custom-order form (Formspree if configured, else WhatsApp).
- *   5. Sync contact links from config.js and run the mobile nav + footer year.
+ *   2. Render the THREE featured creations (editorial) from products.js.
+ *   3. Honest calls to action (WhatsApp / email enquiries — no fake checkout).
+ *   4. Product details + coming-soon panels as accessible native <dialog>s.
+ *   5. Drive the custom-order form (Formspree if configured, else WhatsApp).
+ *   6. Sync contact links from config.js, mobile nav, header scroll, footer year,
+ *      and subtle scroll-reveal animation (fully reduced-motion aware).
  *
- * The page still shows brand, about, contact and policy info without JavaScript;
- * only the live product grid and form enhancements require it.
+ * The page still shows brand, story, contact and policy info without JavaScript;
+ * only the live gallery and form enhancements require it.
  * ========================================================================== */
 (function () {
   "use strict";
@@ -38,6 +40,18 @@
   function $(sel, ctx) { return (ctx || document).querySelector(sel); }
   function $all(sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
 
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  // Intrinsic pixel sizes of the photos, so <img> can reserve space (no layout
+  // shift) even though CSS controls the displayed box.
+  var IMG_DIMS = {
+    "1.png": [1027, 887], "2.png": [904, 683], "3.png": [720, 1280],
+    "4.png": [720, 1280], "5.png": [850, 655], "6.png": [720, 1280],
+    "7.png": [1096, 1215], "8.png": [807, 1280], "9.png": [863, 1280],
+  };
+
   // ---- Money formatting -----------------------------------------------------
 
   // ISO 4217 minor-unit exponents we care about (default 2).
@@ -59,7 +73,6 @@
         currency: currency,
       }).format(major);
     } catch (e) {
-      // Fallback if the locale/currency is not supported in this browser.
       return currency + " " + major.toFixed(exp);
     }
   }
@@ -99,8 +112,6 @@
     return "mailto:" + email + (parts.length ? "?" + parts.join("&") : "");
   }
 
-  // ---- Product catalogue ----------------------------------------------------
-
   function productEnquiryMessage(p) {
     return (
       "Hi Crafts by Malika, I'm interested in the \"" + p.name + "\". " +
@@ -108,121 +119,155 @@
     );
   }
 
-  function buildCard(p) {
-    var card = el("article", { className: "card", attrs: { "data-category": p.category } });
+  // ---- Featured creations ---------------------------------------------------
 
-    // Media (square, cover fill)
-    var figure = el("figure", { className: "card__media" });
-    figure.appendChild(el("img", {
+  // Left-to-right display order of the three equal cards on the homepage.
+  // Selection is still driven by `featured: true` in products.js; this only
+  // controls ordering.
+  var FEATURED_ORDER = ["throw-heritage", "shawl-golden", "wallhanging-boho"];
+
+  function getFeatured() {
+    var byId = {};
+    PRODUCTS.forEach(function (p) { if (p.featured) byId[p.id] = p; });
+    var ordered = [];
+    FEATURED_ORDER.forEach(function (id) {
+      if (byId[id]) { ordered.push(byId[id]); delete byId[id]; }
+    });
+    // Append any other featured items not named above (safety net).
+    Object.keys(byId).forEach(function (id) { ordered.push(byId[id]); });
+    return ordered.slice(0, 3);
+  }
+
+  function buildFeature(p) {
+    var btn = el("button", {
+      className: "feature reveal",
+      attrs: {
+        type: "button",
+        "aria-label": "View " + p.name + " — " + p.category + ". " + priceLabel(p) + ".",
+      },
+    });
+
+    var dims = IMG_DIMS[p.image] || [];
+    var media = el("span", { className: "feature__media" });
+    media.appendChild(el("img", {
       attrs: {
         src: p.image,
         alt: p.imageAlt || p.name,
         loading: "lazy",
         decoding: "async",
+        width: dims[0],
+        height: dims[1],
       },
     }));
-    if (p.featured) {
-      figure.appendChild(el("span", { className: "card__flag", text: "Featured" }));
-    }
-    card.appendChild(figure);
+    btn.appendChild(media);
 
-    // Body: title + price/status only
-    var body = el("div", { className: "card__body" });
-    body.appendChild(el("h3", { className: "card__title", text: p.name }));
+    var body = el("span", { className: "feature__body" });
+    body.appendChild(el("span", { className: "feature__category", text: p.category }));
+    body.appendChild(el("span", { className: "feature__name", text: p.name }));
+    body.appendChild(el("span", { className: "feature__price", text: priceLabel(p) }));
+    // Static, non-user content only — safe to use innerHTML for the arrow glyph.
+    body.appendChild(el("span", { className: "feature__cta", html: 'View &amp; enquire <span aria-hidden="true">&rarr;</span>' }));
+    btn.appendChild(body);
 
-    var meta = el("div", { className: "card__meta" });
-    meta.appendChild(el("span", { className: "card__price", text: priceLabel(p) }));
-    if (STATUS_LABELS[p.stockStatus]) {
-      meta.appendChild(el("span", {
-        className: "card__status card__status--" + p.stockStatus,
-        text: STATUS_LABELS[p.stockStatus],
-      }));
-    }
-    body.appendChild(meta);
-    card.appendChild(body);
-
-    // Action area — text button is the accessible control; whole card is clickable.
-    var actions = el("div", { className: "card__actions" });
-    var viewBtn = el("button", {
-      className: "btn--card-cta",
-      text: "View details",
-      attrs: { type: "button", "aria-label": "View details for " + p.name },
-    });
-    viewBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      openModal(p);
-    });
-    actions.appendChild(viewBtn);
-    card.appendChild(actions);
-
-    // The whole card surface opens the modal for mouse/touch users.
-    card.addEventListener("click", function () { openModal(p); });
-
-    return card;
+    btn.addEventListener("click", function () { openModal(p); });
+    return btn;
   }
 
-  // ---- Product modal --------------------------------------------------------
+  function renderFeatured() {
+    var grid = $("#featured-grid");
+    if (!grid) return;
+    grid.innerHTML = "";
+    var list = getFeatured();
+    if (!list.length) {
+      grid.appendChild(el("p", { className: "featured__loading", text: "Featured pieces are coming soon." }));
+      return;
+    }
+    list.forEach(function (p) { grid.appendChild(buildFeature(p)); });
+  }
+
+  // ---- Dialog helpers (shared by product modal + coming-soon) ---------------
+
+  function openDialog(dialog) {
+    if (!dialog) return;
+    dialog._opener = document.activeElement;
+    if (typeof dialog.showModal === "function") {
+      if (!dialog.open) dialog.showModal();
+    } else {
+      dialog.setAttribute("open", "");
+    }
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeDialog(dialog) {
+    if (!dialog) return;
+    if (typeof dialog.close === "function") dialog.close();
+    else dialog.removeAttribute("open");
+  }
+
+  /** Wire close buttons, backdrop click, and scroll/focus restore (once). */
+  function wireDialog(dialog) {
+    if (!dialog || dialog._wired) return;
+    dialog._wired = true;
+
+    $all("[data-close-dialog]", dialog).forEach(function (b) {
+      b.addEventListener("click", function () { closeDialog(dialog); });
+    });
+
+    // Click on the backdrop (the dialog element itself, outside its content box).
+    dialog.addEventListener("click", function (e) {
+      if (e.target === dialog) closeDialog(dialog);
+    });
+
+    // Fires on close button, backdrop, AND native Escape ('cancel' -> 'close').
+    dialog.addEventListener("close", function () {
+      document.body.style.overflow = "";
+      var opener = dialog._opener;
+      // Native <dialog> usually restores focus; this is a belt-and-braces fallback.
+      if (opener && typeof opener.focus === "function" && document.activeElement === document.body) {
+        opener.focus();
+      }
+    });
+  }
+
+  // ---- Product modal (native <dialog>) --------------------------------------
 
   var _modal = null;
 
   function getModal() {
     if (_modal) return _modal;
 
-    var overlay = el("div", {
-      className: "modal-overlay",
-      attrs: { role: "dialog", "aria-modal": "true", "aria-label": "Product details" },
-    });
-    overlay.hidden = true;
+    var dialog = el("dialog", { className: "modal-dialog", attrs: { "aria-label": "Product details" } });
 
     var panel = el("div", { className: "modal" });
-
     var closeBtn = el("button", {
       className: "modal__close",
       text: "×",
-      attrs: { type: "button", "aria-label": "Close" },
+      attrs: { type: "button", "aria-label": "Close", "data-close-dialog": "" },
     });
-    closeBtn.addEventListener("click", closeModal);
     panel.appendChild(closeBtn);
-
-    var media = document.createElement("figure");
-    media.className = "modal__media";
-    panel.appendChild(media);
+    panel.appendChild(el("figure", { className: "modal__media" }));
     panel.appendChild(el("div", { className: "modal__content" }));
+    dialog.appendChild(panel);
 
-    overlay.appendChild(panel);
-
-    // Close on backdrop click
-    overlay.addEventListener("click", function (e) {
-      if (e.target === overlay) closeModal();
-    });
-
-    // Close on Escape
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && _modal && !_modal.hidden) closeModal();
-    });
-
-    document.body.appendChild(overlay);
-    _modal = overlay;
-    return overlay;
+    document.body.appendChild(dialog);
+    wireDialog(dialog);
+    _modal = dialog;
+    return dialog;
   }
 
   function openModal(p) {
-    var overlay = getModal();
-    var media = overlay.querySelector(".modal__media");
-    var content = overlay.querySelector(".modal__content");
+    var dialog = getModal();
+    var media = dialog.querySelector(".modal__media");
+    var content = dialog.querySelector(".modal__content");
 
-    // Rebuild media
+    var dims = IMG_DIMS[p.image] || [];
     media.innerHTML = "";
     media.appendChild(el("img", {
-      attrs: { src: p.image, alt: p.imageAlt || p.name, decoding: "async" },
+      attrs: { src: p.image, alt: p.imageAlt || p.name, decoding: "async", width: dims[0], height: dims[1] },
     }));
 
-    // Rebuild content
     content.innerHTML = "";
-
-    if (p.category) {
-      content.appendChild(el("p", { className: "modal__category", text: p.category }));
-    }
+    if (p.category) content.appendChild(el("p", { className: "modal__category", text: p.category }));
     content.appendChild(el("h2", { className: "modal__title", text: p.name }));
 
     var pills = el("div", { className: "modal__pills" });
@@ -262,11 +307,7 @@
     actions.appendChild(el("a", {
       className: "btn btn--primary",
       text: "Enquire on WhatsApp",
-      attrs: {
-        href: whatsappLink(productEnquiryMessage(p)),
-        target: "_blank",
-        rel: "noopener",
-      },
+      attrs: { href: whatsappLink(productEnquiryMessage(p)), target: "_blank", rel: "noopener" },
     }));
     actions.appendChild(el("a", {
       className: "btn btn--ghost",
@@ -287,59 +328,33 @@
     }
     content.appendChild(actions);
 
-    overlay.hidden = false;
-    document.body.style.overflow = "hidden";
-    overlay.querySelector(".modal__close").focus();
+    openDialog(dialog);
   }
 
-  function closeModal() {
-    if (!_modal) return;
-    _modal.hidden = true;
-    document.body.style.overflow = "";
-  }
+  function closeModal() { closeDialog(_modal); }
 
-  function renderProducts(filter) {
-    var grid = $("#product-grid");
-    if (!grid) return;
-    grid.innerHTML = "";
+  // ---- Coming-soon dialog (future shop) -------------------------------------
 
-    var list = PRODUCTS.filter(function (p) {
-      return !filter || filter === "all" || p.category === filter;
-    });
+  function setupComingSoon() {
+    var trigger = $("#view-collection");
+    var dialog = $("#coming-soon-dialog");
+    if (!trigger || !dialog) return;
 
-    if (!list.length) {
-      grid.appendChild(el("p", { className: "product-grid__empty", text: "No items in this category yet." }));
-      return;
+    var wa = $("#dialog-whatsapp");
+    if (wa) {
+      wa.setAttribute("href", whatsappLink(
+        "Hi Crafts by Malika, I'd love to see more of your work. What's available at the moment?"
+      ));
     }
-    list.forEach(function (p) { grid.appendChild(buildCard(p)); });
-  }
 
-  function renderFilters() {
-    var wrap = $("#filters");
-    if (!wrap) return;
+    wireDialog(dialog);
 
-    var categories = [];
-    PRODUCTS.forEach(function (p) {
-      if (categories.indexOf(p.category) === -1) categories.push(p.category);
-    });
-
-    var all = ["all"].concat(categories);
-    all.forEach(function (cat, i) {
-      var btn = el("button", {
-        className: "filter" + (i === 0 ? " is-active" : ""),
-        text: cat === "all" ? "All" : cat,
-        attrs: { type: "button", "data-filter": cat, "aria-pressed": i === 0 ? "true" : "false" },
-      });
-      btn.addEventListener("click", function () {
-        $all(".filter", wrap).forEach(function (b) {
-          b.classList.remove("is-active");
-          b.setAttribute("aria-pressed", "false");
-        });
-        btn.classList.add("is-active");
-        btn.setAttribute("aria-pressed", "true");
-        renderProducts(cat);
-      });
-      wrap.appendChild(btn);
+    // TODO(shop): Replace this coming-soon dialog with navigation to the dedicated
+    // collection page once the future shop route is implemented.
+    trigger.addEventListener("click", function (e) {
+      if (typeof dialog.showModal !== "function") return; // no native dialog: follow href to #contact
+      e.preventDefault();
+      openDialog(dialog);
     });
   }
 
@@ -391,6 +406,10 @@
   function prefillCustomForm(p) {
     var form = $("#custom-order-form");
     if (!form) return;
+    // Open the progressive-reveal panel so the fields are visible.
+    var details = $("#custom-reveal");
+    if (details) details.open = true;
+
     var typeField = form.elements.namedItem("productType");
     var descField = form.elements.namedItem("description");
     var nameField = form.elements.namedItem("name");
@@ -440,7 +459,6 @@
       var endpoint = CONFIG.forms && CONFIG.forms.formspreeEndpoint;
 
       if (endpoint) {
-        // Send through Formspree (or compatible) endpoint.
         if (status) status.textContent = "Sending your enquiry…";
         fetch(endpoint, {
           method: "POST",
@@ -533,11 +551,50 @@
     });
   }
 
-  // ---- Misc -----------------------------------------------------------------
+  // ---- Header scroll state --------------------------------------------------
 
-  function prefersReducedMotion() {
-    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function setupHeaderScroll() {
+    var header = $("#site-header");
+    var hero = $("#home");
+    if (!header) return;
+    // The header is transparent over the hero and turns solid once the hero has
+    // essentially scrolled past the (sticky) bar. Fall back to a small threshold
+    // if there is no hero.
+    function computeThreshold() {
+      var hh = header.offsetHeight || 68;
+      return hero ? Math.max(hero.offsetHeight - hh - 8, 24) : 24;
+    }
+    var threshold = computeThreshold();
+    function onScroll() { header.classList.toggle("is-scrolled", window.scrollY > threshold); }
+    function onResize() { threshold = computeThreshold(); onScroll(); }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
   }
+
+  // ---- Scroll reveal --------------------------------------------------------
+
+  function setupReveals() {
+    var nodes = $all(".reveal");
+    if (!nodes.length) return;
+    // No animation when reduced motion is preferred or IO is unsupported:
+    // show everything immediately so content is never gated on animation.
+    if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
+      nodes.forEach(function (n) { n.classList.add("is-visible"); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-visible");
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    nodes.forEach(function (n) { io.observe(n); });
+  }
+
+  // ---- Misc -----------------------------------------------------------------
 
   function setYear() {
     var y = $("#year");
@@ -550,9 +607,11 @@
     setYear();
     syncContactLinks();
     setupNav();
-    renderFilters();
-    renderProducts("all");
+    setupHeaderScroll();
+    renderFeatured();
+    setupComingSoon();
     setupCustomForm();
+    setupReveals(); // after renderFeatured so dynamically-created .reveal nodes are observed
   }
 
   if (document.readyState === "loading") {
