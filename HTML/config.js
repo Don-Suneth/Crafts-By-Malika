@@ -25,21 +25,10 @@ window.CONFIG = {
   },
 
   contact: {
-    // ---------------------------------------------------------------------
-    // WhatsApp number for click-to-chat links.
-    // Format: FULL international number, DIGITS ONLY (country code + number),
-    // with no "+", no spaces, no leading 0. Example (Sri Lanka): 9477XXXXXXX
-    //
-    // TODO(business): The number below came from the original MVP and appears
-    // to be an Australian mobile (+61 480 152 146), most likely the developer's.
-    // Confirm whether enquiries should reach this number, or replace it with the
-    // business's own Sri Lankan WhatsApp number before launch.
-    // ---------------------------------------------------------------------
-    whatsapp: "61480152146",
-    whatsappDisplay: "+61 480 152 146",
-
+    // Email is the site's only contact method. Enquiries and the custom-order
+    // form all reach the business here (the form posts via Formspree, below).
     // TODO(business): Confirm the public business email address.
-    email: "neranjasuneth@gmail.com",
+    email: "craftsbymalika@gmail.com",
 
     // TODO(business): Confirm a realistic reply time, e.g. "within 1 business day".
     responseTime: "",
@@ -78,11 +67,12 @@ window.CONFIG = {
   },
 
   forms: {
-    // Optional Formspree endpoint for the custom-order form.
-    // Leave EMPTY to use the built-in WhatsApp / email fallback (works with no backend).
-    // To enable inbox delivery: create a free form at https://formspree.io and
-    // paste its endpoint here, e.g. "https://formspree.io/f/abcdwxyz".
-    formspreeEndpoint: "",
+    // Formspree endpoint the custom-order form posts to (required — it is the
+    // only way the form delivers enquiries). If this is empty, the form shows an
+    // error popup asking the customer to email us directly instead.
+    // To change it: create a free form at https://formspree.io and paste its
+    // endpoint here, e.g. "https://formspree.io/f/abcdwxyz".
+    formspreeEndpoint: "https://formspree.io/f/mnjyyrrr",
   },
 
   payments: {

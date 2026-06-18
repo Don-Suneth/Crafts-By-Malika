@@ -4,9 +4,9 @@
  * Responsibilities:
  *   1. Format money safely (LKR, minor units, Intl.NumberFormat, with fallback).
  *   2. Render the THREE featured creations (editorial) from products.js.
- *   3. Honest calls to action (WhatsApp / email enquiries — no fake checkout).
+ *   3. Honest calls to action (email enquiries — no fake checkout).
  *   4. Product details + coming-soon panels as accessible native <dialog>s.
- *   5. Drive the custom-order form (Formspree if configured, else WhatsApp).
+ *   5. Drive the custom-order form (submits to the configured Formspree endpoint).
  *   6. Sync contact links from config.js, mobile nav, header scroll, footer year,
  *      and subtle scroll-reveal animation (fully reduced-motion aware).
  *
@@ -93,16 +93,6 @@
   };
 
   // ---- Contact link builders ------------------------------------------------
-
-  function waNumber() {
-    return (CONFIG.contact && CONFIG.contact.whatsapp) || "";
-  }
-
-  function whatsappLink(message) {
-    var n = waNumber();
-    var base = n ? "https://wa.me/" + n : "https://wa.me/";
-    return message ? base + "?text=" + encodeURIComponent(message) : base;
-  }
 
   function mailtoLink(subject, body) {
     var email = (CONFIG.contact && CONFIG.contact.email) || "";
@@ -306,12 +296,7 @@
     var actions = el("div", { className: "modal__actions" });
     actions.appendChild(el("a", {
       className: "btn btn--primary",
-      text: "Enquire on WhatsApp",
-      attrs: { href: whatsappLink(productEnquiryMessage(p)), target: "_blank", rel: "noopener" },
-    }));
-    actions.appendChild(el("a", {
-      className: "btn btn--ghost",
-      text: "Email instead",
+      text: "Enquire by email",
       attrs: { href: mailtoLink("Enquiry: " + p.name, productEnquiryMessage(p)) },
     }));
     if (p.customisable) {
@@ -340,13 +325,6 @@
     var dialog = $("#coming-soon-dialog");
     if (!trigger || !dialog) return;
 
-    var wa = $("#dialog-whatsapp");
-    if (wa) {
-      wa.setAttribute("href", whatsappLink(
-        "Hi Crafts by Malika, I'd love to see more of your work. What's available at the moment?"
-      ));
-    }
-
     wireDialog(dialog);
 
     // TODO(shop): Replace this coming-soon dialog with navigation to the dedicated
@@ -359,49 +337,6 @@
   }
 
   // ---- Custom-order form ----------------------------------------------------
-
-  // Read a named control via form.elements so names like "name" don't collide
-  // with built-in HTMLFormElement properties (form.name is the form's own name).
-  function fieldValue(form, name) {
-    var control = form.elements.namedItem(name);
-    return control ? String(control.value).trim() : "";
-  }
-
-  function getFormData(form) {
-    return {
-      name: fieldValue(form, "name"),
-      country: fieldValue(form, "country"),
-      email: fieldValue(form, "email"),
-      phone: fieldValue(form, "phone"),
-      productType: fieldValue(form, "productType"),
-      colours: fieldValue(form, "colours"),
-      size: fieldValue(form, "size"),
-      requiredDate: fieldValue(form, "requiredDate"),
-      budget: fieldValue(form, "budget"),
-      currency: fieldValue(form, "currency"),
-      delivery: fieldValue(form, "delivery"),
-      description: fieldValue(form, "description"),
-    };
-  }
-
-  function buildEnquiryMessage(d) {
-    var lines = [
-      "Custom order enquiry — Crafts by Malika",
-      d.name ? "Name: " + d.name : "",
-      d.country ? "Country: " + d.country : "",
-      d.email ? "Email: " + d.email : "",
-      d.phone ? "Phone/WhatsApp: " + d.phone : "",
-      d.productType ? "Product type: " + d.productType : "",
-      d.colours ? "Preferred colours: " + d.colours : "",
-      d.size ? "Size: " + d.size : "",
-      d.requiredDate ? "Required by: " + d.requiredDate : "",
-      d.budget ? "Budget: " + d.budget : "",
-      d.currency ? "Preferred currency: " + d.currency : "",
-      d.delivery ? "Delivery to: " + d.delivery : "",
-      d.description ? "Details: " + d.description : "",
-    ];
-    return lines.filter(Boolean).join("\n");
-  }
 
   function prefillCustomForm(p) {
     var form = $("#custom-order-form");
@@ -420,34 +355,47 @@
         descField.value = seed + descField.value;
       }
     }
-    updateFormWhatsappLink();
     var custom = document.getElementById("custom");
     if (custom) custom.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth" });
     if (nameField) nameField.focus();
   }
 
-  function updateFormWhatsappLink() {
-    var form = $("#custom-order-form");
-    var link = $("#custom-whatsapp");
-    if (!form || !link) return;
-    link.setAttribute("href", whatsappLink(buildEnquiryMessage(getFormData(form))));
+  // Success / error popup for the form, reusing the shared .dialog styles. Built
+  // lazily on first use, then reused.
+  var _feedbackDialog = null;
+  function showFormFeedback(ok, title, message) {
+    if (!_feedbackDialog) {
+      var dialog = el("dialog", { className: "dialog", attrs: { "aria-labelledby": "form-feedback-title" } });
+      var inner = el("div", { className: "dialog__inner" });
+      inner.appendChild(el("button", {
+        className: "dialog__close", text: "×",
+        attrs: { type: "button", "data-close-dialog": "", "aria-label": "Close" },
+      }));
+      inner.appendChild(el("p", { className: "eyebrow", attrs: { "data-feedback-eyebrow": "" } }));
+      inner.appendChild(el("h2", { className: "dialog__title", attrs: { id: "form-feedback-title" } }));
+      inner.appendChild(el("p", { className: "dialog__text", attrs: { "data-feedback-text": "" } }));
+      var acts = el("div", { className: "dialog__actions" });
+      acts.appendChild(el("button", {
+        className: "btn btn--primary", text: "Close",
+        attrs: { type: "button", "data-close-dialog": "" },
+      }));
+      inner.appendChild(acts);
+      dialog.appendChild(inner);
+      document.body.appendChild(dialog);
+      wireDialog(dialog);
+      _feedbackDialog = dialog;
+    }
+    _feedbackDialog.querySelector("[data-feedback-eyebrow]").textContent = ok ? "Enquiry sent" : "Couldn't send";
+    _feedbackDialog.querySelector(".dialog__title").textContent = title;
+    _feedbackDialog.querySelector("[data-feedback-text]").textContent = message;
+    openDialog(_feedbackDialog);
   }
 
   function setupCustomForm() {
     var form = $("#custom-order-form");
     if (!form) return;
     var status = $("#form-status");
-    var waLink = $("#custom-whatsapp");
-
-    // Keep the "Send via WhatsApp instead" link in sync with what's typed.
-    form.addEventListener("input", updateFormWhatsappLink);
-    updateFormWhatsappLink();
-
-    if (waLink) {
-      waLink.addEventListener("click", function () {
-        if (status) status.textContent = "Opening WhatsApp with your enquiry…";
-      });
-    }
+    var email = (CONFIG.contact && CONFIG.contact.email) || "craftsbymalika@gmail.com";
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -455,41 +403,32 @@
         form.reportValidity();
         return;
       }
-      var data = getFormData(form);
-      var endpoint = CONFIG.forms && CONFIG.forms.formspreeEndpoint;
 
-      if (endpoint) {
-        if (status) status.textContent = "Sending your enquiry…";
-        fetch(endpoint, {
-          method: "POST",
-          headers: { Accept: "application/json" },
-          body: new FormData(form),
-        })
-          .then(function (res) {
-            if (res.ok) {
-              form.reset();
-              updateFormWhatsappLink();
-              if (status) status.textContent = "Thank you! Your enquiry has been sent. We'll be in touch soon.";
-            } else {
-              throw new Error("Bad response");
-            }
-          })
-          .catch(function () {
-            if (status) {
-              status.innerHTML =
-                "Sorry, that didn't send. Please use the " +
-                '"Send via WhatsApp instead" button above, or email us.';
-            }
-          });
-      } else {
-        // No backend configured: hand off to WhatsApp with a prefilled message.
-        var url = whatsappLink(buildEnquiryMessage(data));
-        window.open(url, "_blank", "noopener");
-        if (status) {
-          status.textContent =
-            "Opening WhatsApp with your enquiry. If nothing happened, use the WhatsApp button above or email us.";
-        }
+      var endpoint = CONFIG.forms && CONFIG.forms.formspreeEndpoint;
+      if (!endpoint) {
+        showFormFeedback(false, "Sorry, that didn't send",
+          "The enquiry form isn't fully set up yet. Please email us at " + email + ".");
+        return;
       }
+
+      if (status) status.textContent = "Sending your enquiry…";
+      fetch(endpoint, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(form),
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("Bad response");
+          form.reset();
+          if (status) status.textContent = "";
+          showFormFeedback(true, "Thank you — your enquiry is on its way",
+            "We've received your custom order enquiry and will reply by email soon.");
+        })
+        .catch(function () {
+          if (status) status.textContent = "";
+          showFormFeedback(false, "Sorry, that didn't send",
+            "Something went wrong sending your enquiry. Please try again, or email us at " + email + ".");
+        });
     });
   }
 
@@ -499,11 +438,6 @@
     var c = CONFIG.contact || {};
     var s = CONFIG.social || {};
 
-    var wa = $('[data-contact="whatsapp"]');
-    if (wa && c.whatsapp) {
-      wa.setAttribute("href", whatsappLink());
-      if (c.whatsappDisplay) wa.textContent = c.whatsappDisplay;
-    }
     var em = $('[data-contact="email"]');
     if (em && c.email) {
       em.setAttribute("href", "mailto:" + c.email);
