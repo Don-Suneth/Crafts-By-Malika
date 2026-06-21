@@ -2,12 +2,11 @@
  * app.js — Behaviour for the Crafts by Malika storefront
  * -----------------------------------------------------------------------------
  * Responsibilities:
- *   1. Format money safely (LKR, minor units, Intl.NumberFormat, with fallback).
- *   2. Render the THREE featured creations (editorial) from products.js.
- *   3. Honest calls to action (email enquiries — no fake checkout).
- *   4. Product details + coming-soon panels as accessible native <dialog>s.
- *   5. Drive the custom-order form (submits to the configured Formspree endpoint).
- *   6. Sync contact links from config.js, mobile nav, header scroll, footer year,
+ *   1. Render the three featured creations (editorial) from products.js.
+ *   2. Honest calls to action (email enquiries — no fake purchase flow).
+ *   3. Product details + form feedback as accessible native <dialog>s.
+ *   4. Drive the custom-order form (submits to the configured Formspree endpoint).
+ *   5. Sync contact links from config.js, mobile nav, header scroll, footer year,
  *      and subtle scroll-reveal animation (fully reduced-motion aware).
  *
  * The page still shows brand, story, contact and policy info without JavaScript;
@@ -47,44 +46,10 @@
   // Intrinsic pixel sizes of the photos, so <img> can reserve space (no layout
   // shift) even though CSS controls the displayed box.
   var IMG_DIMS = {
-    "1.png": [1027, 887], "2.png": [904, 683], "3.png": [720, 1280],
-    "4.png": [720, 1280], "5.png": [850, 655], "6.png": [720, 1280],
-    "7.png": [1096, 1215], "8.png": [807, 1280], "9.png": [863, 1280],
+    "6.png": [720, 1280],
+    "7.png": [1096, 1215],
+    "8.png": [807, 1280],
   };
-
-  // ---- Money formatting -----------------------------------------------------
-
-  // ISO 4217 minor-unit exponents we care about (default 2).
-  var MINOR_UNITS = { LKR: 2, USD: 2, GBP: 2, EUR: 2, AUD: 2, JPY: 0 };
-
-  /**
-   * Format an amount given in MINOR units (e.g. cents) into a localized string.
-   * Uses Intl.NumberFormat; falls back to a plain "CODE 0.00" string if anything
-   * is unavailable, so prices never crash the page.
-   */
-  function formatMoney(minor, currency, locale) {
-    currency = currency || (CONFIG.currency && CONFIG.currency.base) || "LKR";
-    locale = locale || (CONFIG.currency && CONFIG.currency.locale) || "en-LK";
-    var exp = MINOR_UNITS[currency] != null ? MINOR_UNITS[currency] : 2;
-    var major = minor / Math.pow(10, exp);
-    try {
-      return new Intl.NumberFormat(locale, {
-        style: "currency",
-        currency: currency,
-      }).format(major);
-    } catch (e) {
-      return currency + " " + major.toFixed(exp);
-    }
-  }
-
-  /** What to show for a product's price, honouring the "no fake prices" rule. */
-  function priceLabel(p) {
-    var show = CONFIG.currency && CONFIG.currency.showPrices;
-    if (show && p.priceConfirmed && p.priceMinor != null) {
-      return formatMoney(p.priceMinor, p.currency, CONFIG.currency.locale);
-    }
-    return "Price on request";
-  }
 
   var STATUS_LABELS = {
     made_to_order: "Made to order",
@@ -112,20 +77,19 @@
   // ---- Featured creations ---------------------------------------------------
 
   // Left-to-right display order of the three equal cards on the homepage.
-  // Selection is still driven by `featured: true` in products.js; this only
-  // controls ordering.
+  // All catalogue products are shown; this list only fixes their order.
   var FEATURED_ORDER = ["throw-heritage", "shawl-golden", "wallhanging-boho"];
 
   function getFeatured() {
     var byId = {};
-    PRODUCTS.forEach(function (p) { if (p.featured) byId[p.id] = p; });
+    PRODUCTS.forEach(function (p) { byId[p.id] = p; });
     var ordered = [];
     FEATURED_ORDER.forEach(function (id) {
       if (byId[id]) { ordered.push(byId[id]); delete byId[id]; }
     });
-    // Append any other featured items not named above (safety net).
-    Object.keys(byId).forEach(function (id) { ordered.push(byId[id]); });
-    return ordered.slice(0, 3);
+    // Append any products not named above (safety net), preserving file order.
+    PRODUCTS.forEach(function (p) { if (byId[p.id]) { ordered.push(p); delete byId[p.id]; } });
+    return ordered;
   }
 
   function buildFeature(p) {
@@ -169,13 +133,13 @@
     grid.innerHTML = "";
     var list = getFeatured();
     if (!list.length) {
-      grid.appendChild(el("p", { className: "featured__loading", text: "Featured pieces are coming soon." }));
+      grid.appendChild(el("p", { className: "featured__loading", text: "No featured pieces to show right now." }));
       return;
     }
     list.forEach(function (p) { grid.appendChild(buildFeature(p)); });
   }
 
-  // ---- Dialog helpers (shared by product modal + coming-soon) ---------------
+  // ---- Dialog helpers (shared by product modal + form feedback) -------------
 
   function openDialog(dialog) {
     if (!dialog) return;
@@ -261,7 +225,7 @@
     content.appendChild(el("h2", { className: "modal__title", text: p.name }));
 
     var pills = el("div", { className: "modal__pills" });
-    pills.appendChild(el("span", { className: "modal__price", text: priceLabel(p) }));
+    pills.appendChild(el("span", { className: "modal__price", text: "Contact us for a quote" }));
     if (STATUS_LABELS[p.stockStatus]) {
       pills.appendChild(el("span", {
         className: "modal__status modal__status--" + p.stockStatus,
@@ -317,24 +281,6 @@
   }
 
   function closeModal() { closeDialog(_modal); }
-
-  // ---- Coming-soon dialog (future shop) -------------------------------------
-
-  function setupComingSoon() {
-    var trigger = $("#view-collection");
-    var dialog = $("#coming-soon-dialog");
-    if (!trigger || !dialog) return;
-
-    wireDialog(dialog);
-
-    // TODO(shop): Replace this coming-soon dialog with navigation to the dedicated
-    // collection page once the future shop route is implemented.
-    trigger.addEventListener("click", function (e) {
-      if (typeof dialog.showModal !== "function") return; // no native dialog: follow href to #contact
-      e.preventDefault();
-      openDialog(dialog);
-    });
-  }
 
   // ---- Custom-order form ----------------------------------------------------
 
@@ -491,12 +437,14 @@
     var header = $("#site-header");
     var hero = $("#home");
     if (!header) return;
-    // The header is transparent over the hero and turns solid once the hero has
-    // essentially scrolled past the (sticky) bar. Fall back to a small threshold
-    // if there is no hero.
+    // Pages without a hero (e.g. policies) keep the header solid so it stays
+    // readable over the light page background.
+    if (!hero) { header.classList.add("is-scrolled"); return; }
+    // Over the hero the header is transparent and turns solid once the hero has
+    // essentially scrolled past the (sticky) bar.
     function computeThreshold() {
       var hh = header.offsetHeight || 68;
-      return hero ? Math.max(hero.offsetHeight - hh - 8, 24) : 24;
+      return Math.max(hero.offsetHeight - hh - 8, 24);
     }
     var threshold = computeThreshold();
     function onScroll() { header.classList.toggle("is-scrolled", window.scrollY > threshold); }
@@ -543,7 +491,6 @@
     setupNav();
     setupHeaderScroll();
     renderFeatured();
-    setupComingSoon();
     setupCustomForm();
     setupReveals(); // after renderFeatured so dynamically-created .reveal nodes are observed
   }

@@ -1,0 +1,5 @@
+# robots.txt for Crafts by Malika
+User-agent: *
+Allow: /
+
+Sitemap: https://don-suneth.github.io/Crafts-By-Malika/sitemap.xml

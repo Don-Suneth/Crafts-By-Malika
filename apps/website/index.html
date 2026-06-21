@@ -7,8 +7,7 @@
   <!-- Primary SEO -->
   <title>Crafts by Malika — Handmade Crochet from Sri Lanka</title>
   <meta name="description" content="Crafts by Malika makes handmade crochet toys, accessories and home décor in Sri Lanka. See featured pieces and request custom, made-to-order work." />
-  <!-- TODO(deploy): replace https://crafts-by-malika.example with your real domain in this file, robots.txt and sitemap.xml -->
-  <link rel="canonical" href="https://crafts-by-malika.example/" />
+  <link rel="canonical" href="https://don-suneth.github.io/Crafts-By-Malika/" />
   <meta name="theme-color" content="#25140c" />
 
   <!-- Open Graph / social sharing -->
@@ -16,16 +15,16 @@
   <meta property="og:site_name" content="Crafts by Malika" />
   <meta property="og:title" content="Crafts by Malika — Handmade Crochet from Sri Lanka" />
   <meta property="og:description" content="Handmade crochet toys, accessories and home décor, made to order in Sri Lanka." />
-  <meta property="og:url" content="https://crafts-by-malika.example/" />
-  <!-- TODO(business): ideally provide a dedicated 1200x630 share image. For now this uses a real product photo. -->
-  <meta property="og:image" content="https://crafts-by-malika.example/2.png" />
-  <meta property="og:image:alt" content="A hand-crocheted blush-pink turtle toy by Crafts by Malika." />
+  <meta property="og:url" content="https://don-suneth.github.io/Crafts-By-Malika/" />
+  <!-- Social-share image: a real product photo (7.png, the Heritage Granny Throw). A dedicated 1200x630 image could be used instead later. -->
+  <meta property="og:image" content="https://don-suneth.github.io/Crafts-By-Malika/7.png" />
+  <meta property="og:image:alt" content="A hand-crocheted granny-square throw by Crafts by Malika." />
 
   <!-- Twitter / X card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Crafts by Malika — Handmade Crochet from Sri Lanka" />
   <meta name="twitter:description" content="Handmade crochet toys, accessories and home décor, made to order in Sri Lanka." />
-  <meta name="twitter:image" content="https://crafts-by-malika.example/2.png" />
+  <meta name="twitter:image" content="https://don-suneth.github.io/Crafts-By-Malika/7.png" />
 
   <!-- Favicon (SVG, modern browsers) -->
   <link rel="icon" href="logo.svg" type="image/svg+xml" />
@@ -51,8 +50,8 @@
     "@type": "Organization",
     "name": "Crafts by Malika",
     "description": "Handmade crochet toys, accessories and home décor, made to order in Sri Lanka.",
-    "url": "https://crafts-by-malika.example/",
-    "logo": "https://crafts-by-malika.example/logo.svg",
+    "url": "https://don-suneth.github.io/Crafts-By-Malika/",
+    "logo": "https://don-suneth.github.io/Crafts-By-Malika/logo.svg",
     "areaServed": "LK",
     "sameAs": [
       "https://www.facebook.com/crafts.bymalika",
@@ -123,7 +122,7 @@
             décor and most are made to order, so colours and sizes can be tailored
             to you.
           </p>
-          <!-- TODO(business): Expand this with the real story in Malika's own words —
+          <!-- Owner note: this section can be expanded with Malika's own words —
                how she started and what handmade means to the family. Keep it genuine;
                do not add invented details. -->
         </div>
@@ -141,10 +140,13 @@
         <header class="section__head reveal">
           <p class="eyebrow">Featured creations</p>
           <h2>A few favourites.</h2>
+          <p class="section__intro">
+            These examples show the type of handmade work available. Contact us to
+            discuss colours, sizes and custom requests.
+          </p>
         </header>
 
-        <!-- Editorial featured grid (one large + two smaller) is rendered from
-             products.js by app.js. Shows the three items flagged `featured: true`. -->
+        <!-- Editorial featured grid rendered from products.js by app.js. -->
         <div class="featured__grid" id="featured-grid" aria-live="polite">
           <p class="featured__loading">Loading featured pieces…</p>
         </div>
@@ -164,13 +166,11 @@
       </div>
     </section>
 
-    <!-- ====================== COLLECTION CTA (dark) ================== -->
+    <!-- ====================== ENQUIRY CTA (dark) ===================== -->
     <section class="band">
       <div class="container band__inner reveal">
-        <h2 class="band__title">Coming Soon</h2>
-        <!-- Without JS this is a real link to the contact footer; app.js upgrades it
-             to open the accessible coming-soon dialog. -->
-        <a class="btn btn--on-color band__cta" id="view-collection" href="#contact">View available designs</a>
+        <h2 class="band__title">Have something in mind?</h2>
+        <a class="btn btn--on-color band__cta" href="#custom">Start an enquiry</a>
       </div>
     </section>
 
@@ -291,7 +291,7 @@
         <h2 class="site-footer__heading">Information</h2>
         <ul>
           <li><a href="policies.html#shipping">Shipping &amp; Returns</a></li>
-          <li><a href="policies.html#currency">Currency &amp; Pricing</a></li>
+          <li><a href="policies.html#currency">Pricing &amp; Payment</a></li>
           <li><a href="policies.html#faq">FAQ</a></li>
           <li><a href="policies.html#privacy">Privacy</a></li>
           <li><a href="policies.html#terms">Terms</a></li>
@@ -301,31 +301,13 @@
 
     <div class="container site-footer__bottom">
       <p class="currency-notice">
-        Prices are shown in Sri Lankan Rupees (LKR). For international orders, the
-        final amount and any currency conversion are confirmed by your bank or the
-        payment provider — see our <a href="policies.html#currency">currency note</a>.
+        Prices and payment are arranged directly with you. Tell us what you'd like
+        and we'll confirm availability, price and payment options before anything
+        is agreed.
       </p>
       <p class="copyright">© <span id="year">2026</span> Crafts by Malika. All rights reserved.</p>
     </div>
   </footer>
-
-  <!-- ==================== COMING-SOON DIALOG (shop) ================ -->
-  <!-- Accessible native dialog used by the "View the full collection" button until
-       the dedicated shop page exists. -->
-  <dialog class="dialog" id="coming-soon-dialog" aria-labelledby="coming-soon-title">
-    <div class="dialog__inner">
-      <button type="button" class="dialog__close" data-close-dialog aria-label="Close">×</button>
-      <p class="eyebrow">Coming soon</p>
-      <h2 class="dialog__title" id="coming-soon-title">The full collection is on its way</h2>
-      <p class="dialog__text">
-        We're preparing a dedicated list of designs to choose from.
-        For now, you can contact us for more details.
-      </p>
-      <div class="dialog__actions">
-        <a class="btn btn--primary" href="mailto:craftsbymalika@gmail.com?subject=Crafts%20by%20Malika%20%E2%80%94%20enquiry">Email us</a>
-      </div>
-    </div>
-  </dialog>
 
   <!-- Data first, then behaviour. Plain scripts so the site works from the file
        system as well as a web server (no module/CORS requirements). -->

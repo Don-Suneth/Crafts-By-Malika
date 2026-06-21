@@ -1,6 +1,0 @@
-# robots.txt for Crafts by Malika
-# TODO(deploy): replace the domain below with your real domain.
-User-agent: *
-Allow: /
-
-Sitemap: https://crafts-by-malika.example/sitemap.xml

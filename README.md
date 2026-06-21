@@ -1,239 +1,159 @@
-# Crafts by Malika 
+# Crafts by Malika
 
-A professional catalogue and enquiry website for **Crafts by Malika**, a genuine
-family business in **Sri Lanka** making handmade crochet toys, accessories and home
-décor.
+A static **showcase and enquiry website** for **Crafts by Malika**, a small family
+business in **Sri Lanka** making handmade crochet.
 
-> **Status:** Version 1 (catalogue + enquiry). **Not yet a checkout.** Prices,
-> policies, contact details and some product facts are placeholders until the owner
-> confirms them — see [BUSINESS_SETUP.md](BUSINESS_SETUP.md). This is **not**
-> production-ready until those are filled in.
+**Public site:** <https://don-suneth.github.io/Crafts-By-Malika/>
 
----
+## Purpose
 
-## What it does
+The site introduces the business and its handmade work, and makes it easy for
+customers to get in touch. It is a showcase-and-enquiry site, **not** an online store
+and **not** a full catalogue.
 
-- Presents an **editorial homepage** with **three featured creations**; all nine
-  real products stay in `products.js`, ready for the future full-collection page.
-- Lets customers **enquire** about any item via **WhatsApp** or **email**.
-- Provides a **custom-order form** that sends a tidy enquiry (via WhatsApp, or a form
-  service if you add one).
-- Handles money honestly: one **canonical LKR** price per product, formatted with
-  browser internationalisation; no fake currency conversions.
-- Ships SEO and accessibility fundamentals.
+## Business model
+
+Customers **enquire first**. For each order, the design, price, timeframe, delivery
+and payment arrangements are then discussed **directly** with the customer. Nothing is
+bought or paid for through the website.
+
+## The three examples
+
+The homepage shows three real pieces — the **Boho Wall Hanging**, the **Heritage
+Granny Throw** and the **Golden Fringe Shawl**. These are **representative examples of
+the type of work available**, not stocked items and not a complete product list.
+Colours, sizes and custom requests are arranged on enquiry.
+
+## What the website does
+
+- Displays the three representative examples.
+- Opens an accessible product dialog for each piece (image + details).
+- Sends a **product enquiry email** (a pre-filled `mailto:`) for any piece.
+- Provides a **custom-order form**.
+- Submits the form through **Formspree**, with success / error feedback.
+- Provides **business and policy information** (the policies / information page).
+
+## What the website does not do
+
+- No checkout.
+- No card payments.
+- No fixed online pricing.
+- No currency conversion.
+- No live inventory or stock counts.
+- No customer accounts or logins.
+- No automatic order processing.
 
 ## Technology
 
-Plain **HTML, CSS and vanilla JavaScript**. No framework, no build step, no
-dependencies. (See "Architecture" for why.) Works opened directly from disk or
-served by any static host.
+Plain, dependency-free static site:
 
-## Project structure
+- **HTML**
+- **CSS**
+- **vanilla JavaScript** (no framework, no build step)
+- **Formspree** — delivers the custom-order form to the business inbox
+- **GitHub Pages** — hosting
+- **GitHub Actions** — deployment
+
+## Repository structure
 
 ```
-HomeCortchet/
-├── HTML/                     ← the website (this is the web root to deploy)
-│   ├── index.html            ← single-page storefront
-│   ├── policies.html         ← shipping/returns/privacy/terms/currency info
-│   ├── style.css             ← design system + all styles
-│   ├── config.js             ← ⚙️ business details (edit me)
-│   ├── products.js           ← 🧶 product catalogue (edit me)
-│   ├── app.js                ← featured render, dialogs, currency, forms, nav
-│   ├── robots.txt, sitemap.xml
-│   ├── logo.svg, Crochet-rafiki.svg   ← logo (illustration retained, not on hero)
-│   ├── fonts/                ← self-hosted Fraunces display serif (headings only)
-│   └── 1.png … 9.png         ← real product photos
-├── README.md  AUDIT.md  BUSINESS_SETUP.md  PAYMENTS_AND_CURRENCY.md  ROADMAP.md
+Crafts-By-Malika/
+├── apps/
+│   └── website/               ← the website (this folder is the web root)
+│       ├── index.html          ← single-page showcase + enquiry
+│       ├── policies.html       ← ordering / delivery / pricing / privacy info
+│       ├── style.css           ← all styles
+│       ├── config.js           ← business details (edit me)
+│       ├── products.js         ← the three product examples (edit me)
+│       ├── app.js              ← rendering, dialogs, form, navigation
+│       ├── robots.txt, sitemap.xml
+│       ├── logo.svg, hero.jpg
+│       ├── 6.png, 7.png, 8.png ← the three product images
+│       └── fonts/              ← self-hosted heading font (Fraunces)
+├── .github/
+│   └── workflows/
+│       └── deploy-pages.yml    ← GitHub Pages deployment
+├── README.md
+├── BUSINESS_SETUP.md
 └── .gitignore
 ```
 
-## Run it locally
+## Local development
 
-Because the site is plain static files, you have two options:
+No tooling required — it is plain static files.
 
-**Option 1 — just open it.** Double-click `HTML/index.html` (it's built to work from
-the `file://` protocol). Note: some browsers block the custom heading font over
-`file://`, in which case headings fall back to the built-in serif — everything else
-looks and works the same. Serving over HTTP (Option 2) shows the Fraunces headings.
+- **Open directly:** double-click `apps/website/index.html`. (Some browsers block the
+  custom heading font over `file://`; headings then fall back to a built-in serif.
+  Serving over HTTP shows the intended font.)
+- **Serve locally (recommended):**
+  ```bash
+  cd apps/website
+  python -m http.server 8000
+  ```
+  Then visit <http://localhost:8000>.
 
-**Option 2 — serve it (recommended; closest to production).** From the `HTML/`
-folder:
+## How to update the site
 
-```bash
-# Python (if installed)
-python -m http.server 8000
-# or Node
-npx serve .
-```
+Everything you'll normally change is in `apps/website/config.js` and
+`apps/website/products.js` — plain text, safe to edit.
 
-Then visit <http://localhost:8000>.
+### The three examples and their descriptions
+Edit `apps/website/products.js`. Each example is one `{ … }` block; change the text
+between the quotes to update a name or description. The left-to-right display order is
+set by the short list near the top of `apps/website/app.js`.
 
----
+### Product images
+Put the image file in `apps/website/` and set the product's `image` field to its
+filename (e.g. `image: "7.png"`). Always write a factual `imageAlt`. The current
+examples use `6.png`, `7.png` and `8.png`.
 
-## How to maintain the site (no coding experience needed)
+### Contact details and social links
+Edit `apps/website/config.js`:
+- `contact.email` — the business email (`craftsbymalika@gmail.com`)
+- `social.facebook`, `social.instagram`
 
-Everything you'll normally change is in **`HTML/config.js`** and
-**`HTML/products.js`**. Search either file for `TODO(business)` to find every spot
-that needs your input.
+### Formspree endpoint
+Edit `apps/website/config.js` → `forms.formspreeEndpoint`. Create a free form at
+<https://formspree.io> and paste its endpoint (e.g. `https://formspree.io/f/abcdwxyz`).
+The custom-order form POSTs there.
 
-### Update business contact details
+> **Security:** `config.js` is public (it is shipped to the browser). Never put
+> passwords, secret API keys or private tokens in it, or anywhere in the frontend.
 
-Open `HTML/config.js` and edit the `contact` and `social` values (WhatsApp number,
-email, Facebook/Instagram, location, reply time). The WhatsApp number must be the
-full international number, **digits only** (e.g. Sri Lanka `9477XXXXXXX`).
+## Deployment
 
-### Update / add / remove products
+Hosted on **GitHub Pages via GitHub Actions** — `.github/workflows/deploy-pages.yml`.
 
-Open `HTML/products.js`. Each product is one `{ … }` block.
+The workflow triggers on every push to `main` (and can be run manually from the repo's
+**Actions** tab). It uploads **only `apps/website/`** and publishes it as the site
+root.
 
-- **Edit:** change the text between quotes.
-- **Add:** copy a block, paste it, give it a new unique `id` and `slug`.
-- **Remove:** delete the whole block (including its trailing comma).
+### Required one-time setting
+In the repository: **Settings → Pages → Build and deployment → Source → GitHub
+Actions**.
 
-### Change the three featured products (homepage)
+**Public URL:** <https://don-suneth.github.io/Crafts-By-Malika/>
 
-The homepage shows **three** featured creations, not the whole catalogue. To choose
-which three appear:
+## Pre-launch & maintenance checklist
 
-1. In `HTML/products.js`, set `featured: true` on the three products you want and
-   `featured: false` on the rest.
-2. (Optional) To control the **left-to-right order** of the three cards, edit the
-   `FEATURED_ORDER` list near the top of the featured section in `HTML/app.js`. Ids
-   not listed are appended automatically. The three render as equal cards.
+Pre-launch:
+- [ ] The three example descriptions read correctly.
+- [ ] `craftsbymalika@gmail.com`, Facebook and Instagram are correct.
+- [ ] A test enquiry has been sent and arrives in the Formspree inbox.
+- [ ] **Settings → Pages → Source → GitHub Actions** is set and a deploy run succeeded.
+- [ ] The live site has been checked on mobile and desktop.
 
-All nine products always remain in `products.js`; the unfeatured six are simply held
-back for the future full-collection page.
+Maintenance:
+- [ ] Keep the three examples and their photos current.
+- [ ] Reply to enquiries promptly.
+- [ ] Update `config.js` if contact or social details change.
 
-### The homepage gallery, "coming soon" dialog & future shop
+## Future structure (not built yet)
 
-- There is **no `/shop` page yet**. The **"View the full collection"** button opens an
-  accessible **coming-soon dialog** (a native `<dialog>` with Escape-to-close, focus
-  management and focus return). Without JavaScript the button is a normal link to the
-  contact footer.
-- Tapping a featured piece opens a **product dialog** (image, details and the
-  WhatsApp / email / "request a custom version" actions).
-- **Where the future shop connects:** search `HTML/app.js` for `TODO(shop)`. Replace
-  the coming-soon dialog there with navigation to the new collection page once it
-  exists. That page can reuse `products.js` (data) and the existing product dialog.
-- **Motion:** headings and sections fade in gently on scroll
-  (`IntersectionObserver`). All animation is disabled and content shown immediately
-  when the browser requests `prefers-reduced-motion: reduce`, and nothing is ever
-  hidden waiting on animation.
+These folders **do not exist** today and contain no code. They are noted only as
+possible future locations:
 
-### Set or change a product's price (currency is LKR)
+- `apps/dashboard/` — *may* later hold a real internal dashboard.
+- `services/api/` — *may* later hold a backend, **only if** one is genuinely required.
 
-In that product's block:
-
-```js
-priceMinor: 250000,      // LKR 2,500.00  — price in CENTS (×100), no decimals here
-currency: "LKR",
-priceConfirmed: true,    // flip to true to actually show the price
-```
-
-Until `priceConfirmed` is `true` (and a `priceMinor` is set), the card shows
-**"Price on request"**. The global switch `CONFIG.currency.showPrices` (in
-`config.js`) must also be `true` (it is by default).
-
-### How currency display works
-
-- One canonical price per product in **LKR**, stored in **minor units (cents)** to
-  avoid rounding errors.
-- Formatted with **`Intl.NumberFormat`** for correct symbol/grouping.
-- The site does **not** show converted USD/GBP/etc. prices (no live rate source) — it
-  shows LKR and explains that the customer's bank/provider sets the final amount.
-- Full rationale and how to add conversions safely later:
-  [PAYMENTS_AND_CURRENCY.md](PAYMENTS_AND_CURRENCY.md).
-
-### Replace or add product images
-
-Put the image in `HTML/` and reference its filename in the product's `image` field
-(e.g. `image: "10.png"`). Keep the originals. Always write a factual `imageAlt`.
-The three featured cards show a compact, full-bleed `object-fit: cover` thumbnail
-(kept short on purpose); the product dialog shows the full piece. If you add a photo,
-also add its pixel size to the small `IMG_DIMS` map in `app.js` so the layout reserves
-space (prevents shift) — optional but tidy.
-
-**Hero image:** the homepage hero is a **full-bleed `background-image`** set on the
-`.hero` section in `style.css`, using `HTML/hero.jpg` (a styled crochet/yarn scene,
-sourced free from Pexels, no attribution required). It fills the viewport
-(`min-height: 100svh`) with `background-size: cover` and a warm gradient overlay so
-the left-aligned hero text stays readable. The header is transparent over the hero
-and turns into a solid cream bar once you scroll past it. There is a single primary
-CTA ("Explore our work"). To swap in your own professional photo, just replace
-`hero.jpg` (a warm, calm, portrait-ish photo crops cleanly). See the `TODO(hero)`
-note in `index.html`.
-
-### Configure the custom-order form (optional)
-
-By default the form composes a **WhatsApp** message from what's typed (works with no
-backend). To receive submissions in an inbox instead:
-
-1. Create a free form at <https://formspree.io>.
-2. Paste its endpoint into `config.js` → `forms.formspreeEndpoint`
-   (e.g. `"https://formspree.io/f/abcdwxyz"`).
-
-When set, the form POSTs there; if it fails, it falls back to WhatsApp.
-
-### Configure a payment link (later)
-
-There is **no checkout in v1**. When you have a **verified hosted** payment link
-(PayHere recommended for Sri Lanka), you can reference it in `config.js` →
-`payments.paymentLinkUrl`. Read [PAYMENTS_AND_CURRENCY.md](PAYMENTS_AND_CURRENCY.md)
-first. **Never** put a payment **secret key** in any of these files or in Git.
-
-### Could we use Stripe later?
-
-Only if the business **genuinely** incorporates in a Stripe-supported country —
-Stripe does **not** support Sri Lanka-registered businesses, and PayPal can't receive
-funds in Sri Lanka. Don't fake a location. Details and the recommended Sri Lankan
-alternative (PayHere) are in [PAYMENTS_AND_CURRENCY.md](PAYMENTS_AND_CURRENCY.md).
-
----
-
-## Deploy
-
-The site is static, so any static host works (all free tiers are fine):
-
-1. Set your real domain everywhere the placeholder appears: search the project for
-   `crafts-by-malika.example` (in `index.html`, `policies.html`, `robots.txt`,
-   `sitemap.xml`) and replace it.
-2. Deploy the **contents of the `HTML/` folder** as the site root. Options:
-   - **Netlify / Vercel / Cloudflare Pages:** connect the repo, set the publish
-     directory to `HTML`.
-   - **GitHub Pages:** publish the `HTML/` folder.
-   - Or upload the `HTML/` files to any web host via FTP.
-3. Submit `sitemap.xml` in Google Search Console once live.
-
-## Architecture (why static, no framework)
-
-A small handmade-goods catalogue with an enquiry form has **no requirement** that a
-framework solves better than plain files. Staying static means: zero build tooling,
-nothing to patch, trivial hosting, fast loads, and code an early-career developer can
-read. A data-driven `products.js` already removes the real pain point (duplicated
-card markup). Introducing React/Vue/a backend would add maintenance burden and
-security surface for no benefit at this stage. If real online checkout is needed,
-the right move is a **hosted** payment provider (see the roadmap), not a custom
-backend.
-
-## Known limitations (be honest)
-
-- **Not a shop yet** — no automated checkout; ordering is via enquiry. The homepage
-  shows three featured pieces; the full-collection page is a future step (the
-  "View the full collection" button currently opens a coming-soon dialog).
-- **Prices are hidden** until real LKR prices are confirmed.
-- **Contact details, policies, shipping, lead times and some product facts are
-  placeholders** pending owner confirmation.
-- The live product grid and form enhancements need JavaScript (brand, about, contact
-  and policy info still work without it; a `<noscript>` note points to WhatsApp/email).
-- Product images are the original PNGs; WebP/AVIF conversion is a future optimisation.
-
-## Next steps
-
-See [ROADMAP.md](ROADMAP.md) and [BUSINESS_SETUP.md](BUSINESS_SETUP.md). The three
-highest-value actions are: (1) confirm contact details + real LKR prices,
-(2) finalise shipping & returns policy, (3) set the real domain and submit the sitemap.
-
-## Recovery
-
-The pre-redesign state is preserved on the git branch
-`backup/pre-redesign-2026-06-15`.
+Until there is a real need, the project stays a plain static site.

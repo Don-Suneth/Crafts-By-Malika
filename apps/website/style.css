@@ -376,6 +376,9 @@ h3 { font-size: var(--step-1); }
    off-white cards clearly stand out (background contrast). Each card is one
    accessible button that opens the product modal. */
 .featured { background: var(--surface-2); }
+/* Widen the heading block so the intro reads comfortably (same treatment the
+   custom section uses); the short heading itself is unaffected. */
+.featured .section__head { max-width: 56ch; }
 .featured__loading { color: var(--muted); }
 .featured__grid {
   display: grid;
@@ -658,8 +661,9 @@ h3 { font-size: var(--step-1); }
 .modal__actions { display: flex; flex-direction: column; gap: var(--space-2); margin-top: auto; padding-top: var(--space-4); border-top: 1px solid var(--border); }
 .modal__actions .btn { width: 100%; }
 
-/* ------------------------- Coming-soon dialog (shop) --------------------- */
-/* (.dialog positioning + backdrop are defined in the shared modal block above.) */
+/* --------------------- Shared feedback dialog --------------------------- */
+/* Used by the Formspree success / error popups (built in app.js).
+   (.dialog positioning + backdrop are defined in the shared modal block above.) */
 .dialog__inner {
   position: relative;
   background: var(--surface);
